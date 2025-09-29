@@ -23,6 +23,9 @@ interface DataTableProps {
     onPageChange: (page: number) => void;
     showFirstLast?: boolean;
     maxVisiblePages?: number;
+    itemsPerPage?: number;
+    onItemsPerPageChange?: (n: number) => void;
+    perPageOptions?: number[];
   };
 }
 
@@ -134,16 +137,18 @@ function DataTable({
   emptyMessage = "No data available",
   pagination,
 }: DataTableProps) {
+  console.log(columns);
+
   return (
     <div>
       <div>{titleNode}</div>
-      <Table className={className}>
-        <TableHeader>
+      <Table className={` rounded-[8px] ${className} relative`}>
+        <TableHeader className="top-0 sticky">
           <TableRow className=" !border-b-transparent">
             {columns.map(column => (
               <TableHead
                 key={column.name}
-                className={`py-2 px-3 ${column.className}`}
+                className={`py-2 px-3 text-gray-400 font-exo2 font-medium text-sm ${column.className}`}
               >
                 {column.label}
               </TableHead>
@@ -184,6 +189,9 @@ function DataTable({
             onPageChange={pagination.onPageChange}
             showFirstLast={pagination.showFirstLast}
             maxVisiblePages={pagination.maxVisiblePages}
+            itemsPerPage={pagination.itemsPerPage}
+            onItemsPerPageChange={pagination.onItemsPerPageChange}
+            perPageOptions={pagination.perPageOptions}
           />
         </div>
       )}

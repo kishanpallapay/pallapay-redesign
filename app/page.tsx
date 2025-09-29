@@ -3,12 +3,20 @@ import React, { useState } from "react";
 
 import { SmartPagination } from "../components/ui/pagination";
 import { Input } from "../components/ui/input";
-import { Plus, User } from "lucide-react";
+import { Checkbox } from "../components/ui/checkbox";
+import { Switch } from "../components/ui/switch";
+import { RadioGroup, RadioGroupItem } from "../components/ui/radio-group";
+import { Plus, User, User2 } from "lucide-react";
 import { DataTable } from "../components/ui/table";
+import { Button } from "../components/ui/button";
 
 export default function Home() {
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
+  const [textValue, setTextValue] = useState("");
+  const [isChecked, setIsChecked] = useState(false);
+  const [isToggled, setIsToggled] = useState(false);
+  const [radioValue, setRadioValue] = useState("basic");
+  const [itemsPerPage, setItemsPerPage] = useState(5);
 
   // Generate more sample data for pagination demo
   const allTransactionData = Array.from({ length: 23 }, (_, i) => ({
@@ -474,22 +482,126 @@ export default function Home() {
               <div className="space-y-4">
                 <h3 className="font-exo2-semibold text-lg">Buttons</h3>
                 <div className="space-y-3">
-                  <button className="w-full bg-orange text-white px-4 py-2 rounded-lg font-exo2-medium hover:bg-orange-200 transition-colors">
-                    Primary Button
-                  </button>
-                  <button className="w-full bg-success-200 text-white px-4 py-2 rounded-lg font-exo2-medium hover:bg-success-400 transition-colors">
-                    Success Button
-                  </button>
-                  <button className="w-full bg-error-200 text-white px-4 py-2 rounded-lg font-exo2-medium hover:bg-error-400 transition-colors">
-                    Error Button
-                  </button>
-                  <button className="w-full bg-info-200 text-white px-4 py-2 rounded-lg font-exo2-medium hover:bg-info-400 transition-colors">
-                    Info Button
-                  </button>
-                  <button className="w-full bg-alert-200 text-black px-4 py-2 rounded-lg font-exo2-medium hover:bg-alert-300 transition-colors">
-                    Alert Button
-                  </button>
+                  <Button variant="primary" size="md" className="w-full">
+                    Primary
+                  </Button>
+                  <Button variant="outline" size="md" className="w-full">
+                    Outline
+                  </Button>
+                  <Button variant="ghost" size="md" className="w-full">
+                    Ghost
+                  </Button>
+                  {/* Sizes */}
+                  <div className="space-y-2">
+                    <p className="font-exo2-semibold text-sm">Sizes</p>
+                    <div className="flex flex-wrap gap-2">
+                      <Button size="xs">XS</Button>
+                      <Button size="default">Default</Button>
+                      <Button size="sm">Small</Button>
+                      <Button size="md">Medium</Button>
+                      <Button size="lg">Large</Button>
+                    </div>
+                  </div>
+
+                  {/* Icons */}
+                  <div className="space-y-2">
+                    <p className="font-exo2-semibold text-sm">With Icons</p>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <Button>
+                        <Plus className="mr-2 h-4 w-4" /> Add Item
+                      </Button>
+                      <Button variant="outline">
+                        <User className="mr-2 h-4 w-4" /> Profile
+                      </Button>
+                      <Button variant="ghost">
+                        Next <Plus className="ml-2 h-4 w-4" />
+                      </Button>
+                      <Button size="icon" aria-label="Add">
+                        <Plus className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
                 </div>
+              </div>
+
+              {/* Inputs */}
+              <div className="space-y-4">
+                <h3 className="font-exo2-semibold text-lg">Inputs</h3>
+                <div className="space-y-3">
+                  <Input
+                    icon={User2}
+                    label="Username"
+                    placeholder="Type your username"
+                    value={textValue}
+                    onChange={e => setTextValue(e.target.value)}
+                    helperText="Helper: enter at least 3 characters"
+                    successMessage={textValue.length >= 3 ? "Looks good" : ""}
+                    errorMessage={
+                      textValue && textValue.length < 3
+                        ? "Too short (min 3)"
+                        : ""
+                    }
+                  />
+                  <p className="text-xs text-muted-foreground font-exo2-regular">
+                    Current value: {textValue || "(empty)"}
+                  </p>
+                </div>
+              </div>
+
+              {/* Checkbox & Switch */}
+              <div className="space-y-6">
+                <div className="space-y-3">
+                  <h3 className="font-exo2-semibold text-lg">Checkbox</h3>
+                  <label className="flex items-center gap-3">
+                    <Checkbox
+                      checked={isChecked}
+                      onCheckedChange={v => setIsChecked(!!v)}
+                    />
+                    <span className="font-exo2-regular">Accept terms</span>
+                  </label>
+                  <p className="text-xs text-muted-foreground font-exo2-regular">
+                    Checked: {isChecked ? "Yes" : "No"}
+                  </p>
+                </div>
+
+                <div className="space-y-3">
+                  <h3 className="font-exo2-semibold text-lg">Switch</h3>
+                  <div className="flex items-center gap-3">
+                    <Switch
+                      checked={isToggled}
+                      onCheckedChange={setIsToggled}
+                      variant="primary"
+                      size="default"
+                      aria-label="Notifications"
+                    />
+                    <span className="font-exo2-regular">Notifications</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground font-exo2-regular">
+                    Enabled: {isToggled ? "On" : "Off"}
+                  </p>
+                </div>
+              </div>
+
+              {/* Radio Group */}
+              <div className="space-y-4">
+                <h3 className="font-exo2-semibold text-lg">Radio Group</h3>
+                <RadioGroup
+                  value={radioValue}
+                  onValueChange={v => setRadioValue(v)}
+                  className="space-y-3"
+                >
+                  <label className="flex items-center gap-3">
+                    <RadioGroupItem value="basic" id="plan-basic" />
+                    <span className="font-exo2-regular">Basic Plan</span>
+                  </label>
+                  <label className="flex items-center gap-3">
+                    <RadioGroupItem value="pro" id="plan-pro" />
+                    <span className="font-exo2-regular">Pro Plan</span>
+                  </label>
+                </RadioGroup>
+                <p className="text-xs text-muted-foreground font-exo2-regular">
+                  Selected: {radioValue}
+                </p>
               </div>
 
               {/* Cards */}
@@ -680,7 +792,7 @@ export default function Home() {
             </p>
           </div>
         </footer>
-        <Input value="dfgbhfghfg" />
+        <Input value="test " icon={User2} successMessage="dfdsfsdfsdfsd" />
         <DataTable
           titleNode={titleNode}
           columns={columns}
@@ -690,7 +802,13 @@ export default function Home() {
             totalPages,
             onPageChange: handlePageChange,
             showFirstLast: true,
-            maxVisiblePages: 5,
+            maxVisiblePages: 3,
+            itemsPerPage,
+            onItemsPerPageChange: (n: number) => {
+              setItemsPerPage(n);
+              setCurrentPage(1);
+            },
+            perPageOptions: [5, 10, 25, 50],
           }}
         />
       </div>

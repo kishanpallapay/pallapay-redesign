@@ -8,11 +8,18 @@ const buttonVariants = cva(
     variants: {
       variant: {
         primary:
-          "bg-primary text-primary-foreground hover:text-black dark:text-white dark:hover:text-white  shadow hover:opacity-90 hover:scale-105 active:scale-95 active:opacity-80",
+          "bg-orange text-black hover:text-black dark:text-white dark:hover:text-white shadow hover:opacity-90 hover:scale-105 active:scale-95 active:opacity-80",
         outline:
-          "border-1 border-input bg-transparent hover:text-black dark:text-white dark:hover:text-white dark:hover:text-black dark:hover:bg-gray-300 hover:bg-gray-50  hover:scale-105 hover:shadow-md active:scale-95 ",
+          "border-1 border-orange text-orange bg-transparent hover:text-black dark:text-white dark:hover:text-white dark:hover:text-black hover:bg-orange hover:scale-105 hover:shadow-md active:scale-95",
         ghost:
-          "text-foreground hover:opacity-80 hover:scale-105 active:scale-95 active:opacity-60 border-none",
+          "text-orange hover:opacity-80 hover:scale-105 active:scale-95 active:opacity-60 border-none",
+        success:
+          "bg-success-200 text-white hover:bg-success-400 shadow hover:scale-105 active:scale-95",
+        error:
+          "bg-error-200 text-white hover:bg-error-400 shadow hover:scale-105 active:scale-95",
+        info: "bg-info-200 text-white hover:bg-info-400 shadow hover:scale-105 active:scale-95",
+        alert:
+          "bg-alert-200 text-black hover:bg-alert-300 shadow hover:scale-105 active:scale-95",
       },
       size: {
         default: "h-9 px-4 py-2",

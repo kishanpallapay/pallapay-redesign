@@ -7,6 +7,37 @@ import {
 
 import { cn } from "@/lib/utils";
 import { Button, buttonVariants } from "@/components/ui/button";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
+const PaginationSelect = ({
+  value = "10",
+  onChange,
+  options = [10, 25, 50, 100],
+}: {
+  value: string;
+  onChange: (e: string) => void;
+  options?: number[];
+}) => {
+  return (
+    <Select value={value} onValueChange={onChange}>
+      <SelectTrigger className="border-gray-100 text-gray-700">
+        <SelectValue placeholder={`${value} / Page`} />
+      </SelectTrigger>
+      <SelectContent>
+        {options.map(opt => (
+          <SelectItem key={opt} value={String(opt)}>
+            {opt} / Page
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
+  );
+};
 
 // Base Pagination Components
 function Pagination({ className, ...props }: React.ComponentProps<"nav">) {
@@ -15,7 +46,7 @@ function Pagination({ className, ...props }: React.ComponentProps<"nav">) {
       role="navigation"
       aria-label="pagination"
       data-slot="pagination"
-      className={cn("mx-auto flex w-full justify-center", className)}
+      className={cn("justify-center", className)}
       {...props}
     />
   );
@@ -149,6 +180,9 @@ interface SmartPaginationProps {
   showFirstLast?: boolean;
   maxVisiblePages?: number;
   className?: string;
+  itemsPerPage?: number;
+  onItemsPerPageChange?: (n: number) => void;
+  perPageOptions?: number[];
 }
 
 function SmartPagination({
@@ -156,6 +190,9 @@ function SmartPagination({
   totalPages,
   onPageChange,
   showFirstLast = true,
+  itemsPerPage = 10,
+  onItemsPerPageChange,
+  perPageOptions = [10, 25, 50, 100],
   maxVisiblePages = 3,
   className,
 }: SmartPaginationProps) {
@@ -218,86 +255,109 @@ function SmartPagination({
     }
   };
 
+  // When only one page, still show per-page control if available
   if (totalPages <= 1) {
-    return null; // Don't render pagination if there's only one page or less
+    return (
+      <div className="flex items-center justify-start gap-3 w-full">
+        {onItemsPerPageChange && (
+          <div className="flex items-center gap-2 text-sm text-gray-400">
+            <span className="font-exo2-regular">Rows per page:</span>
+            <PaginationSelect
+              value={String(itemsPerPage)}
+              onChange={(v: string) => onItemsPerPageChange(Number(v))}
+              options={perPageOptions}
+            />
+          </div>
+        )}
+      </div>
+    );
   }
 
   return (
-    <Pagination className={className}>
-      <PaginationContent>
-        {/* Previous Button */}
-        <PaginationItem>
-          <PaginationPrevious
-            className="cursor-pointer"
-            disabled={isPreviousDisabled}
-            onClick={() => handlePageClick(currentPage - 1)}
-          />
-        </PaginationItem>
-
-        {/* First Page and Start Ellipsis */}
-        {showFirstLast && visiblePages[0] > 1 && (
-          <>
-            <PaginationItem>
-              <PaginationLink
-                className="cursor-pointer"
-                onClick={() => handlePageClick(1)}
-                isActive={currentPage === 1}
-              >
-                1
-              </PaginationLink>
-            </PaginationItem>
-            {finalShowStartEllipsis && (
-              <PaginationItem>
-                <PaginationEllipsis />
-              </PaginationItem>
-            )}
-          </>
-        )}
-
-        {/* Visible Page Numbers */}
-        {visiblePages.map(page => (
-          <PaginationItem key={page}>
-            <PaginationLink
-              className="cursor-pointer"
-              onClick={() => handlePageClick(page)}
-              isActive={currentPage === page}
-            >
-              {page}
-            </PaginationLink>
+    <div className="flex items-center justify-center gap-3 w-full">
+      <Pagination className={className}>
+        <PaginationContent>
+          {/* Previous Button */}
+          <PaginationItem>
+            <PaginationPrevious
+              className="cursor-pointer text-gray disabled:text-gray-100"
+              disabled={isPreviousDisabled}
+              onClick={() => handlePageClick(currentPage - 1)}
+            />
           </PaginationItem>
-        ))}
 
-        {/* End Ellipsis and Last Page */}
-        {showFirstLast &&
-          visiblePages[visiblePages.length - 1] < totalPages && (
+          {/* First Page and Start Ellipsis */}
+          {showFirstLast && visiblePages[0] > 1 && (
             <>
-              {finalShowEndEllipsis && (
+              <PaginationItem>
+                <PaginationLink
+                  className="cursor-pointer border-gray-100 text-black hover:border-orange"
+                  onClick={() => handlePageClick(1)}
+                  isActive={currentPage === 1}
+                >
+                  1
+                </PaginationLink>
+              </PaginationItem>
+              {finalShowStartEllipsis && (
                 <PaginationItem>
                   <PaginationEllipsis />
                 </PaginationItem>
               )}
-              <PaginationItem>
-                <PaginationLink
-                  className="cursor-pointer"
-                  onClick={() => handlePageClick(totalPages)}
-                  isActive={currentPage === totalPages}
-                >
-                  {totalPages}
-                </PaginationLink>
-              </PaginationItem>
             </>
           )}
 
-        {/* Next Button */}
-        <PaginationItem>
-          <PaginationNext
-            disabled={isNextDisabled}
-            className="cursor-pointer"
-            onClick={() => handlePageClick(currentPage + 1)}
-          />
-        </PaginationItem>
-      </PaginationContent>
-    </Pagination>
+          {/* Visible Page Numbers */}
+          {visiblePages.map(page => (
+            <PaginationItem key={page}>
+              <PaginationLink
+                className="cursor-pointer border-gray-100 text-black hover:border-orange"
+                onClick={() => handlePageClick(page)}
+                isActive={currentPage === page}
+              >
+                {page}
+              </PaginationLink>
+            </PaginationItem>
+          ))}
+
+          {/* End Ellipsis and Last Page */}
+          {showFirstLast &&
+            visiblePages[visiblePages.length - 1] < totalPages && (
+              <>
+                {finalShowEndEllipsis && (
+                  <PaginationItem>
+                    <PaginationEllipsis />
+                  </PaginationItem>
+                )}
+                <PaginationItem>
+                  <PaginationLink
+                    className="cursor-pointer border-gray-100 text-black hover:border-orange"
+                    onClick={() => handlePageClick(totalPages)}
+                    isActive={currentPage === totalPages}
+                  >
+                    {totalPages}
+                  </PaginationLink>
+                </PaginationItem>
+              </>
+            )}
+
+          {/* Next Button */}
+          <PaginationItem>
+            <PaginationNext
+              disabled={isNextDisabled}
+              className="cursor-pointer text-gray disabled:text-gray-100"
+              onClick={() => handlePageClick(currentPage + 1)}
+            />
+          </PaginationItem>
+        </PaginationContent>
+      </Pagination>
+      {onItemsPerPageChange && (
+        <PaginationSelect
+          value={String(itemsPerPage)}
+          onChange={(v: string) => onItemsPerPageChange(Number(v))}
+          options={perPageOptions}
+        />
+      )}
+    </div>
   );
 }
 

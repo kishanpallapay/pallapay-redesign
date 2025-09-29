@@ -1,16 +1,8 @@
 import React, { useState, forwardRef } from "react";
-import { AlertCircle, Check, CheckCircle, CheckCircle2, X } from "lucide-react";
+import { AlertCircle, CheckCircle2 } from "lucide-react";
 
 // Type definitions
 type InputState = "default" | "filled";
-
-interface StateClasses {
-  container: string;
-  input: string;
-  label: string;
-  icon: string;
-  helper: string;
-}
 
 interface InputProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "onChange"> {
@@ -27,7 +19,6 @@ interface InputProps
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onFocus?: (e: React.FocusEvent<HTMLInputElement>) => void;
   onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
-  variant?: "default" | "filled";
 }
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
@@ -45,7 +36,6 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       onChange = () => {},
       onFocus,
       onBlur,
-      variant = "default",
       disabled = false,
       ...props
     },
@@ -53,36 +43,18 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
   ) => {
     const [isFocused, setIsFocused] = useState<boolean>(false);
 
-    const getVariantClass = (variant: string) => {
-      switch (variant) {
-        case "default":
-          return {
-            fieldset:
-              "border border-gray-200 focus-within:border-2 focus-within:border-gray-500",
-            input: "text-gray-900 dark:text-gray-100",
-            legend:
-              "text-gray-400 group-focus-within:text-gray-500 dark:text-gray-200 dark:group-focus-within:text-gray-400",
-            icon: "text-gray-400",
-          };
-        default:
-          return {
-            fieldset:
-              "border border-gray-200 focus-within:border-2 focus-within:border-gray-500",
-            input: "text-gray-900 dark:text-gray-100",
-            legend:
-              "text-gray-400 group-focus-within:text-gray-500 dark:text-gray-200 dark:group-focus-within:text-gray-400",
-            icon: "text-gray-400",
-          };
-      }
-    };
-
-    const variantClass = getVariantClass(variant);
     const hasValue: boolean = Boolean(value && value.length > 0);
     const isLabelFloating: boolean = isFocused || hasValue;
 
     const renderLeftIcon = (): React.ReactNode => {
       if (IconComponent) {
-        return <IconComponent className={`w-4 h-4 ${variantClass?.icon}`} />;
+        return (
+          <IconComponent
+            className={`w-4 h-4 text-gray-400 dark:text-gray-200 group-focus:text-black dark:group-focus:text-gray-400 group-hover:text-black dark:group-hover:text-white transition-colors duration-200 ${
+              isLabelFloating || isFocused ? "text-black dark:text-white" : ""
+            }`}
+          />
+        );
       }
       return null;
     };
@@ -127,12 +99,9 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         return "border-success-500 focus-within:border-success-500 dark:border-success-200";
       }
       if (disabled) {
-        return "border-gray-50 dark:border-gray-500";
+        return "border-gray-100 dark:border-gray-400";
       }
-      return (
-        variantClass?.fieldset ||
-        "border-gray-200 focus-within:border-2 focus-within:border-gray-500"
-      );
+      return "border-gray-200  dark:focus-within:border-gray-100 focus-within:border-gray";
     };
 
     return (
@@ -143,11 +112,13 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           {/* Fieldset for border */}
           <fieldset
             className={`
-              relative rounded-md transition-all duration-200
+              relative rounded-md h-14 transition-all duration-200
               ${getBorderClass()}
               disabled:cursor-not-allowed
-              ${isFocused ? "border-2" : "border"}
+              ${isFocused || isLabelFloating ? "border-2" : "border"}
               ${disabled ? "bg-gray-50 dark:bg-gray-500" : "bg-transparent"}
+              ${errorMessage ? "!bg-error-50 dark:!bg-error-600" : ""}
+              ${successMessage ? "!bg-success-50 dark:!bg-success-600" : ""}
             `}
           >
             {/* Legend - always present but with dynamic content */}
@@ -157,9 +128,9 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
                 ${
                   isLabelFloating
                     ? "text-xs opacity-100 scale-100"
-                    : "text-xs opacity-0 scale-95 pointer-events-none"
+                    : "text-xs opacity-0 scale-95 !w-0 !m-0 !p-0 pointer-events-none"
                 }
-                ${variantClass?.legend}
+                text-gray-400 group-focus-within:text-gray-500 dark:text-gray-200 dark:group-focus-within:text-gray-400
                 ${errorMessage ? "text-error-500 dark:text-error-200" : ""}
                 ${
                   successMessage ? "text-success-500 dark:text-success-200" : ""
@@ -167,9 +138,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
                 ${disabled ? "text-gray-100 dark:text-gray-400" : ""}
               `}
             >
-              <span className="transition-all duration-200 text-transparent bg-transparent">
-                {label}
-              </span>
+              <span className=" text-transparent bg-transparent">{label}</span>
             </legend>
 
             <div className="relative">
@@ -178,19 +147,19 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
                 ref={ref}
                 type={type}
                 value={value}
+                placeholder={isLabelFloating ? placeholder : ""}
                 onChange={onChange}
                 onFocus={handleFocus}
                 onBlur={handleBlur}
-                placeholder={isLabelFloating ? placeholder : ""}
                 disabled={disabled}
                 className={`
-                  w-full h-12 bg-transparent border-none outline-none text-md font-exo2-regular
+                  w-full h-10 bg-transparent border-none outline-none text-md text-gray-500 dark:text-white font-exo2-regular
                   transition-all duration-200
                   ${hasLeftIcon ? "pl-9" : "pl-3"}
                   ${hasRightIcon ? "pr-9" : "pr-3"}
-                  ${variantClass?.input}
+                  text-gray-900 dark:text-gray-100
                   disabled:cursor-not-allowed disabled:text-gray-100 
-                  dark:disabled:text-gray-400
+                  dark:disabled:text-gray-400 placeholder:text-gray-200 dark:placeholder:text-gray-400 pb-4
                   ${className}
                 `}
                 {...props}
@@ -199,22 +168,28 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
               {/* Placeholder Label (positioned inside input when not floating) */}
               <label
                 className={`
-                  absolute font-exo2-regular pointer-events-none z-20
+                  absolute font-exo2-regular group-hover:text-black dark:group-hover:text-white pointer-events-none z-20
                   transition-all duration-200 ease-in-out origin-left
                   ${hasLeftIcon ? "left-9" : "left-3"}
                   ${
                     isLabelFloating
-                      ? "top-0 -translate-y-1/2 left-3 text-xs opacity-0 scale-95"
-                      : "top-1/2 -translate-y-1/2 text-md opacity-100 scale-100"
+                      ? "-top-5 !left-3.5 text-xs scale-95"
+                      : "top-0 text-md left-5  scale-100"
                   }
-                  ${variantClass?.legend}
-                  ${errorMessage ? "text-error-500 dark:text-error-200" : ""}
+                   group-focus-within:text-gray-500 dark:text-gray-200 dark:group-focus-within:text-gray-400
+                  ${errorMessage ? "!text-error-500 dark:!text-error-200" : ""}
                   ${
                     successMessage
-                      ? "text-success-500 dark:text-success-200"
+                      ? "!text-success-500 dark:!text-success-200"
                       : ""
                   }
-                  ${disabled ? "text-gray-100 dark:text-gray-400" : ""}
+                  
+                  ${disabled ? "text-gray-200 dark:text-gray-300" : ""}
+                  ${
+                    isFocused || isLabelFloating
+                      ? "text-black dark:text-white"
+                      : "text-gray-400/*  */"
+                  }
                 `}
               >
                 {label}
@@ -224,8 +199,9 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
               {hasLeftIcon && (
                 <div
                   className={`
-                    absolute left-3 top-1/2 transform -translate-y-1/2 z-10
+                    absolute left-3 top-1 z-10 group-focus-within:text-black
                     ${disabled ? "text-gray-300 dark:text-gray-400" : ""}
+                    
                   `}
                 >
                   {renderLeftIcon()}
@@ -236,8 +212,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
               {hasRightIcon && (
                 <div
                   className={`
-                    absolute right-3 top-1/2 transform -translate-y-1/2 z-10
-                    ${disabled ? "text-gray-300 dark:text-gray-400" : ""}
+                    absolute right-3 top-1 z-10
+                    ${disabled ? "text-gray-200 dark:text-gray-300" : ""}
                   `}
                 >
                   {renderRightIcon()}
@@ -254,11 +230,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
               mt-1 text-xs font-exo2-regular
               ${errorMessage ? "text-error-500 dark:text-error-200" : ""}
               ${successMessage ? "text-success-500 dark:text-success-200" : ""}
-              ${
-                disabled
-                  ? "text-gray-300 dark:text-gray-400"
-                  : "text-gray-500 dark:text-gray-300"
-              }
+              text-gray-300"
             `}
           >
             {getHelperText()}

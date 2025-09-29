@@ -79,6 +79,7 @@
   --color-success-300: var(--success-300);
   --color-success-400: var(--success-400);
   --color-success-500: var(--success-500);
+  --color-success-600: var(--success-600);
 
   --color-error: var(--error);
   --color-error-foreground: var(--error-foreground);
@@ -88,6 +89,7 @@
   --color-error-300: var(--error-300);
   --color-error-400: var(--error-400);
   --color-error-500: var(--error-500);
+  --color-error-600: var(--error-600);
 
   --color-alert: var(--alert);
   --color-alert-foreground: var(--alert-foreground);
@@ -278,6 +280,7 @@
   --success-300: #368a63; /* Success 300 */
   --success-400: #1a6c46; /* Success 400 */
   --success-500: #004e28; /* Success 500 */
+  --success-600: #00150a; /* Success 600 */
 
   --error-50: #ffbbc1; /* Error 50 */
   --error-100: #ff98a2; /* Error 100 */
@@ -285,6 +288,7 @@
   --error-300: #963e45; /* Error 300 */
   --error-400: #732026; /* Error 400 */
   --error-500: #500007; /* Error 500 */
+  --error-600: #290004; /* Error 500 */
 
   --alert-50: #ffe8a5; /* Alert 50 */
   --alert-100: #ffdd75; /* Alert 100 */
@@ -453,6 +457,9 @@
   .bg-success-500 {
     background-color: var(--success-500);
   }
+  .bg-success-600 {
+    background-color: var(--success-600);
+  }
 
   .bg-error-50 {
     background-color: var(--error-50);
@@ -471,6 +478,9 @@
   }
   .bg-error-500 {
     background-color: var(--error-500);
+  }
+  .bg-error-600 {
+    background-color: var(--error-600);
   }
 
   .bg-alert-50 {
@@ -530,6 +540,9 @@
   .text-success-500 {
     color: var(--success-500);
   }
+  .text-success-600 {
+    color: var(--success-600);
+  }
 
   .text-error-50 {
     color: var(--error-50);
@@ -549,7 +562,9 @@
   .text-error-500 {
     color: var(--error-500);
   }
-
+  .text-error-600 {
+    color: var(--error-600);
+  }
   .text-alert-50 {
     color: var(--alert-50);
   }
