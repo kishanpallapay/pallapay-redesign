@@ -112,7 +112,7 @@ export function AuthPageGateway({ initialView }: AuthPageGatewayProps = {}) {
           />
         </div>
       </div>
-      <div className="w-full max-w-xl rounded-2xl bg-transparent md:border-2 md:border-orange md:px-16 md:py-10 px-8">
+      <div className="w-full max-w-xl rounded-2xl bg-transparent md:border-2 md:border-orange md:px-14 md:py-10 px-8">
         <div className="w-full justify-center items-center flex mb-7">
           {" "}
           {showSwitch && (
