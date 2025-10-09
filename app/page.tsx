@@ -9,6 +9,7 @@ import { RadioGroup, RadioGroupItem } from "../components/ui/radio-group";
 import { Plus, User, User2 } from "lucide-react";
 import { DataTable } from "../components/ui/table";
 import { Button } from "../components/ui/button";
+import CalendarComponents from "./calender/page";
 
 export default function Home() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -106,6 +107,9 @@ export default function Home() {
   return (
     <div className={`min-h-screen transition-colors duration-300`}>
       <div className="bg-background text-foreground">
+        <div className="p-10 !text-primary">
+          <CalendarComponents />
+        </div>
         {/* Header */}
         <header className="bg-card border-b border-border p-6">
           <div className="max-w-7xl mx-auto flex justify-between items-center">

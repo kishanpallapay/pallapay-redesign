@@ -49,6 +49,7 @@
   --color-orange-100: var(--orange-100);
   --color-orange-200: var(--orange-200);
   --color-orange-300: var(--orange-300);
+  --color-orange-300: var(--orange-400);
 
   /* Custom Secondary Colors */
   --color-gray: var(--gray);
@@ -172,8 +173,8 @@
   --orange-50: #fef1cc; /* Orange 50 */
   --orange-100: #fcd568; /* Orange 100 */
   --orange-200: #ffa600; /* Orange 200 */
-  --orange-300: #ff8400; /* Orange 300 */
-
+  --orange-300: #ff8400; /* Orange 300 */ 
+--orange-400: #673500;
   /* Custom Secondary Colors - Light Mode */
   --gray: #2a2a2a; /* Main Gray */
   --gray-50: #f6f6f6; /* Gray 50 */
@@ -254,6 +255,7 @@
   --orange-100: #fcd568; /* Orange 100 */
   --orange-200: #ffa600; /* Orange 200 */
   --orange-300: #ff8400; /* Orange 300 */
+  --orange-400: #673500;
 
   /* Custom Secondary Colors - Dark Mode */
   --gray: #242a2a; /* Main Gray */
@@ -328,8 +330,11 @@
   }
   .bg-orange-300 {
     background-color: var(--orange-300);
-  }
-
+  }  
+  
+  .bg-orange-400 {
+      background-color: var(--orange-400);
+    }
   .text-orange {
     color: var(--orange);
   }
@@ -632,5 +637,5 @@
   .text-display-2xl {
     font-size: var(--font-size-display-2xl); /* 72px / 4.5rem */
     line-height: 5rem;
-  }
-}
+  }                                                                                                                                                           }
+
