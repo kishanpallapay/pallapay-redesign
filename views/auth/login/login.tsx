@@ -13,9 +13,12 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { OrDivider } from "@/components/ui/divider";
 import { loginSchema as schema } from "@/validation/auth";
+import { useAuthStore } from "@/lib/stores/auth-store";
 
 function Login() {
   const router = useRouter();
+  const setCredentials = useAuthStore(state => state.setCredentials);
+  const clearAuth = useAuthStore(state => state.clearAuth);
   const [showPassword, setShowPassword] = useState(false);
   const {
     control,
@@ -27,10 +30,20 @@ function Login() {
   });
 
   const onSubmit = (data: any) => {
+    console.log(data);
+
     if (data.email === "admin@example.com" && data.password === "123456") {
-      localStorage.setItem("authToken", "demo_token_123");
+      setCredentials({
+        token: "demo_token_123",
+        user: {
+          id: "admin",
+          email: data.email,
+          name: "Admin User",
+        },
+      });
       router.push("/");
     } else {
+      clearAuth();
       alert("Invalid credentials");
     }
   };
