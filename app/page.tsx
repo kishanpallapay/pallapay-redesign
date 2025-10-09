@@ -1,21 +1,5 @@
-import { useRouter } from 'next/router';
-import React, { useEffect } from 'react';
+import { redirect } from "next/navigation";
 
-const Home = () => {
-    const router = useRouter();
-    useEffect(() => {
-        const token = localStorage.getItem("authToken");
-
-        if (!token) {
-            router.push("/auth/login");
-        }
-    }, [router]);
-
-    return (
-        <div>
-
-        </div>
-    );
-};
-
-export default Home;
+export default function Home() {
+  redirect("/auth");
+}

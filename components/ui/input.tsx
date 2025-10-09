@@ -21,6 +21,7 @@ interface InputProps
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onFocus?: (e: React.FocusEvent<HTMLInputElement>) => void;
   onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
+  isFilled?: boolean;
 }
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
@@ -41,6 +42,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       onFocus,
       onBlur,
       disabled = false,
+      isFilled = false,
       ...props
     },
     ref
@@ -78,24 +80,28 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     };
 
     const renderRightIcon = (): React.ReactNode => {
-        if (RightIconComponent) {
-            return (
-                <button type="button" onClick={onRightIconClick} className="focus:outline-none">
-                    <RightIconComponent className="w-4 h-4 text-gray-400 dark:text-gray-200" />
-                </button>
-            );
-        }
-        if (successMessage) {
-            return (
-                <CheckCircle2 className="w-4 h-4 text-success-500 dark:text-success-200" />
-            );
-        }
-        if (errorMessage) {
-            return (
-                <AlertCircle className="w-4 h-4 text-error-500 dark:text-error-200" />
-            );
-        }
-        return null;
+      if (RightIconComponent) {
+        return (
+          <button
+            type="button"
+            onClick={onRightIconClick}
+            className="focus:outline-none"
+          >
+            <RightIconComponent className="w-4 h-4 text-gray-400 dark:text-gray-200" />
+          </button>
+        );
+      }
+      if (successMessage) {
+        return (
+          <CheckCircle2 className="w-4 h-4 text-success-500 dark:text-success-200" />
+        );
+      }
+      if (errorMessage) {
+        return (
+          <AlertCircle className="w-4 h-4 text-error-500 dark:text-error-200" />
+        );
+      }
+      return null;
     };
 
     const hasLeftIcon = !!renderLeftIcon();
@@ -116,9 +122,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     };
 
     return (
-      <div
-        className={`w-full max-w-sm ${disabled ? "cursor-not-allowed" : ""}`}
-      >
+      <div className={`w-full ${disabled ? "cursor-not-allowed" : ""}`}>
         <div className="group relative">
           {/* Fieldset for border */}
           <fieldset
@@ -130,6 +134,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
               ${disabled ? "bg-gray-50 dark:bg-gray-500" : "bg-transparent"}
               ${errorMessage ? "!bg-error-50 dark:!bg-error-600" : ""}
               ${successMessage ? "!bg-success-50 dark:!bg-success-600" : ""}
+              ${isFilled ? "dark:!bg-gray-600" : ""}
             `}
           >
             {/* Legend - always present but with dynamic content */}
@@ -149,7 +154,9 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
                 ${disabled ? "text-gray-100 dark:text-gray-400" : ""}
               `}
             >
-              <span className=" text-transparent bg-transparent">{label}</span>
+              <span className=" text-transparent bg-transparent text-nowrap">
+                {label}
+              </span>
             </legend>
 
             <div className="relative">

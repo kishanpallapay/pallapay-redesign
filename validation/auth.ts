@@ -15,3 +15,14 @@ export const registerSchema = yup.object().shape({
         .required('Confirm Password is required'),
     referralCode: yup.string(),
 });
+
+export const forgotPasswordSchema = yup.object().shape({
+    email: yup.string().email("Invalid email format").required("Email is required"),
+});
+
+export const resetPasswordSchema = yup.object().shape({
+    password: yup.string().min(6, "Minimum 6 characters").required("Password is required"),
+    confirmPassword: yup.string()
+        .oneOf([yup.ref('password')], 'Passwords must match')
+        .required('Confirm Password is required'),
+});
