@@ -1,15 +1,15 @@
-"use client"
+"use client";
 
-import * as React from "react"
+import * as React from "react";
 import {
   ChevronDownIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
-} from "lucide-react"
-import { DayButton, DayPicker, getDefaultClassNames } from "react-day-picker"
+} from "lucide-react";
+import { DayButton, DayPicker, getDefaultClassNames } from "react-day-picker";
 
-import { cn } from "@/lib/utils"
-import { Button, buttonVariants } from "@/components/ui/button"
+import { cn } from "@/lib/utils";
+import { Button, buttonVariants } from "@/components/ui/button";
 
 function Calendar({
   className,
@@ -25,7 +25,7 @@ function Calendar({
   buttonVariant?: React.ComponentProps<typeof Button>["variant"];
   intensityMap?: Record<string, number>;
 }) {
-  const defaultClassNames = getDefaultClassNames()
+  const defaultClassNames = getDefaultClassNames();
 
   return (
     <DayPicker
@@ -38,7 +38,7 @@ function Calendar({
       )}
       captionLayout={captionLayout}
       formatters={{
-        formatMonthDropdown: (date) =>
+        formatMonthDropdown: date =>
           date.toLocaleString("default", { month: "short" }),
         ...formatters,
       }}
@@ -135,13 +135,13 @@ function Calendar({
               className={cn(className)}
               {...props}
             />
-          )
+          );
         },
         Chevron: ({ className, orientation, ...props }) => {
           if (orientation === "left") {
             return (
               <ChevronLeftIcon className={cn("size-4", className)} {...props} />
-            )
+            );
           }
 
           if (orientation === "right") {
@@ -150,14 +150,14 @@ function Calendar({
                 className={cn("size-4", className)}
                 {...props}
               />
-            )
+            );
           }
 
           return (
             <ChevronDownIcon className={cn("size-4", className)} {...props} />
-          )
+          );
         },
-        DayButton: (props) => {
+        DayButton: props => {
           const dateStr = props.day.date.toISOString().split("T")[0];
           const intensity = intensityMap[dateStr] ?? 0;
           return <CalendarDayButton {...props} intensity={intensity} />;
@@ -169,17 +169,17 @@ function Calendar({
                 {children}
               </div>
             </td>
-          )
+          );
         },
         ...components,
       }}
       {...props}
     />
-  )
+  );
 }
 
 const getIntensityColor = (intensity: number) => {
-  console.log(intensity)
+  console.log(intensity);
   // Handle no intensity
   if (intensity === 0) {
     return "bg-orange-50 dark:bg-orange-400 hover:bg-orange-100 dark:hover:bg-orange-500";
@@ -200,16 +200,16 @@ function CalendarDayButton({
   className,
   day,
   modifiers,
-  intensity = 0, 
+  intensity = 0,
   ...props
-}: React.ComponentProps<typeof DayButton> & { intensity?: number; })  {
-  const defaultClassNames = getDefaultClassNames()
+}: React.ComponentProps<typeof DayButton> & { intensity?: number }) {
+  const defaultClassNames = getDefaultClassNames();
 
-  const ref = React.useRef<HTMLButtonElement>(null)
+  const ref = React.useRef<HTMLButtonElement>(null);
   React.useEffect(() => {
-    if (modifiers.focused) ref.current?.focus()
-  }, [modifiers.focused])
- 
+    if (modifiers.focused) ref.current?.focus();
+  }, [modifiers.focused]);
+
   return (
     <Button
       ref={ref}
@@ -226,13 +226,15 @@ function CalendarDayButton({
       data-range-end={modifiers.range_end}
       data-range-middle={modifiers.range_middle}
       className={cn(
-        `${getIntensityColor(intensity)} text-black data-[range-middle=true]:bg-accent data-[range-middle=true]:text-accent-foreground data-[range-start=true]:bg-primary data-[range-start=true]:text-primary-foreground data-[range-end=true]:bg-primary data-[range-end=true]:text-primary-foreground group-data-[focused=true]/day:border-ring group-data-[focused=true]/day:ring-ring/50 dark:hover:text-accent-foreground flex aspect-square size-auto w-full min-w-(--cell-size) flex-col gap-1 leading-none font-normal group-data-[focused=true]/day:relative group-data-[focused=true]/day:z-10 group-data-[focused=true]/day:ring-[3px] data-[range-end=true]:rounded-md data-[range-end=true]:rounded-r-md data-[range-middle=true]:rounded-none data-[range-start=true]:rounded-md data-[range-start=true]:rounded-l-md [&>span]:text-xs [&>span]:opacity-70`,
+        `${getIntensityColor(
+          intensity
+        )} text-black data-[range-middle=true]:bg-accent data-[range-middle=true]:text-accent-foreground data-[range-start=true]:bg-primary data-[range-start=true]:text-primary-foreground data-[range-end=true]:bg-primary data-[range-end=true]:text-primary-foreground group-data-[focused=true]/day:border-ring group-data-[focused=true]/day:ring-ring/50 dark:hover:text-accent-foreground flex aspect-square size-auto w-full min-w-(--cell-size) flex-col gap-1 leading-none font-normal group-data-[focused=true]/day:relative group-data-[focused=true]/day:z-10 group-data-[focused=true]/day:ring-[3px] data-[range-end=true]:rounded-md data-[range-end=true]:rounded-r-md data-[range-middle=true]:rounded-none data-[range-start=true]:rounded-md data-[range-start=true]:rounded-l-md [&>span]:text-xs [&>span]:opacity-70`,
         defaultClassNames.day,
         className
       )}
       {...props}
     />
-  )
+  );
 }
 
-export { Calendar, CalendarDayButton }
+export { Calendar, CalendarDayButton };
