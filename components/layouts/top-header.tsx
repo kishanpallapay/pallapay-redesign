@@ -91,8 +91,51 @@ export function TopHeader({
     >
       <div className="w-full rounded-[12px] bg-gray-50 dark:bg-gray-600 px-4 py-4  sm:px-4 sm:py-2 md:py-4 md:pl-3.5 md:pr-6">
         <div className="flex w-full flex-wrap items-center gap-4 md:flex-nowrap md:gap-6">
-          <div className="flex w-full items-center justify-end gap-3 md:basis-auto md:flex-nowrap md:gap-4">
-            <div className="flex items-center gap-4">
+          <div className="flex w-full flex-wrap items-center justify-between gap-4 md:flex-nowrap md:gap-6">
+            <div className="flex flex-1 items-center gap-2 md:gap-4">
+              {hasNav ? (
+                <button
+                  type="button"
+                  onClick={onToggleSidebar}
+                  className="inline-flex h-10 w-10 items-center justify-center transition lg:hidden dark:text-white text-black"
+                  aria-label="Toggle navigation"
+                  aria-expanded={sidebarOpen}
+                >
+                  {sidebarOpen ? (
+                    <X className="h-5 w-5" />
+                  ) : (
+                    <Menu className="h-5 w-5" />
+                  )}
+                </button>
+              ) : null}
+
+              <div className="hidden w-full max-w-md flex-1 items-center gap-3 h-[52px] rounded-full  bg-white overflow-hidden text-sm text-gray-500  md:flex dark:border-gray-700 dark:bg-black">
+                <Search
+                  className="h-6 w-6 ml-3.5 text-gray-200 dark:text-gray-400"
+                  aria-hidden="true"
+                />
+                <input
+                  id="global-search"
+                  className="flex-1 bg-white dark:bg-black font-exo2 text-sm text-gray-600 placeholder:text-gray-400 focus:outline-none dark:text-gray-200"
+                />
+              </div>
+
+              <div className="flex items-center gap-2 md:hidden">
+                {typeof header === "string" ? (
+                  <span className="text-base font-exo2-semibold text-black dark:text-white">
+                    {header}
+                  </span>
+                ) : (
+                  header ?? null
+                )}
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3 md:gap-4">
+              {actions ? (
+                <div className="flex items-center gap-3">{actions}</div>
+              ) : null}
+
               <Button
                 type="button"
                 className="bg-white dark:bg-black w-10 h-10 md:h-12 md:w-12 p-2.5  rounded-full relative"

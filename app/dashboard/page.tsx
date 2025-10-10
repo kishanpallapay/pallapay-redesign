@@ -248,7 +248,11 @@ const navItems: NavItem[] = [
 
 export default withResponsiveLayout(DashboardContent, {
   navItems,
-  header: <span className="font-semibold">Pallapay Dashboard</span>,
+  header: (
+    <span className="font-exo2-semibold text-black dark:text-white">
+      Pallapay Dashboard
+    </span>
+  ),
   sidebarTitle: (
     <span className="text-sm font-semibold uppercase">Navigation</span>
   ),
