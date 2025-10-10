@@ -1,0 +1,146 @@
+"use client";
+
+import Image from "next/image";
+import { Bell, Headphones, Menu, Search, X } from "lucide-react";
+import { ComponentPropsWithoutRef, ReactNode, useEffect, useRef } from "react";
+
+import { cn } from "@/lib/utils";
+import { Button } from "../ui/button";
+
+export type HeaderUser = {
+  name: string;
+  email: string;
+  avatarUrl?: string;
+};
+
+type TopHeaderProps = {
+  hasNav: boolean;
+  sidebarOpen: boolean;
+  onToggleSidebar: () => void;
+  header?: ReactNode;
+  actions?: ReactNode;
+  searchPlaceholder: string;
+  hasNotificationDot: boolean;
+  user: HeaderUser;
+  onHeightChange?: (height: number) => void;
+} & ComponentPropsWithoutRef<"header">;
+
+const getInitials = (value: string) =>
+  value
+    .split(" ")
+    .filter(Boolean)
+    .map(part => part.charAt(0)?.toUpperCase() ?? "")
+    .slice(0, 2)
+    .join("") || "JD";
+
+export function TopHeader({
+  hasNav,
+  sidebarOpen,
+  onToggleSidebar,
+  header,
+  actions,
+  searchPlaceholder,
+  hasNotificationDot,
+  user,
+  className,
+  style,
+  onHeightChange,
+  ...rest
+}: TopHeaderProps) {
+  const headerRef = useRef<HTMLElement | null>(null);
+  const lastReportedHeight = useRef<number>(0);
+  const userInitials = getInitials(user.name);
+
+  useEffect(() => {
+    if (!onHeightChange) return;
+    const node = headerRef.current;
+    if (!node) return;
+
+    const reportHeight = (height: number) => {
+      if (Math.abs(lastReportedHeight.current - height) < 0.5) return;
+      lastReportedHeight.current = height;
+      onHeightChange(height);
+    };
+
+    reportHeight(node.getBoundingClientRect().height);
+
+    if (typeof ResizeObserver === "undefined") return;
+
+    const observer = new ResizeObserver(entries => {
+      for (const entry of entries) {
+        if (entry.target !== node) continue;
+        reportHeight(entry.contentRect.height);
+      }
+    });
+
+    observer.observe(node);
+
+    return () => observer.disconnect();
+  }, [onHeightChange]);
+
+  return (
+    <header
+      ref={headerRef}
+      className={cn(
+        "fixed top-6 left-6 right-6 z-30 transition-all",
+        hasNav ? "lg:left-[calc(16rem+2.25rem)]" : "",
+        className
+      )}
+      style={style}
+      {...rest}
+    >
+      <div className="w-full rounded-[12px] bg-gray-50 dark:bg-gray-600 px-4 py-4  sm:px-4 sm:py-2 md:py-4 md:pl-3.5 md:pr-6">
+        <div className="flex w-full flex-wrap items-center gap-4 md:flex-nowrap md:gap-6">
+          <div className="flex w-full items-center justify-end gap-3 md:basis-auto md:flex-nowrap md:gap-4">
+            <div className="flex items-center gap-4">
+              <Button
+                type="button"
+                className="bg-white dark:bg-black w-10 h-10 md:h-12 md:w-12 p-2.5  rounded-full relative"
+                aria-label="Notifications"
+              >
+                <Bell className="h-5 w-5" />
+                {hasNotificationDot ? (
+                  <span className="absolute right-2 top-2 md:top-2.5 md:right-3 inline-flex h-2.5 w-2.5 items-center justify-center rounded-full bg-orange ">
+                    <span className="sr-only">New notifications</span>
+                  </span>
+                ) : null}
+              </Button>
+              <Button
+                variant={"primary"}
+                className="bg-white dark:bg-black w-10 h-10 md:h-12 md:w-12 p-2.5 rounded-full"
+                aria-label="Customer support"
+              >
+                <Headphones className="h-5 w-5" />
+              </Button>
+              <div className="flex items-center gap-2 md:gap-3 rounded-full">
+                {user.avatarUrl ? (
+                  <div className="relative w-10 h-10 md:h-14 md:w-14 overflow-hidden rounded-full bg-gray-200">
+                    <Image
+                      src={user.avatarUrl}
+                      alt={`${user.name}'s avatar`}
+                      fill
+                      sizes="56px"
+                      className="object-cover"
+                    />
+                  </div>
+                ) : (
+                  <div className="flex  w-10 h-10 md:h-14 md:w-14 items-center justify-center rounded-full bg-gray-200 text-base font-semibold text-gray-600 dark:bg-gray-700 dark:text-gray-200">
+                    {userInitials}
+                  </div>
+                )}
+                <div className="hidden min-w-[140px] text-left leading-tight sm:block">
+                  <p className="text-base font-exo2-semibold text-black dark:text-white">
+                    {user.name}
+                  </p>
+                  <p className="text-sm font-exo2-medium text-black dark:text-white opacity-60">
+                    {user.email}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+  );
+}

@@ -9,9 +9,10 @@ import {
 } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X } from "lucide-react";
+import { X } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+import { HeaderUser, TopHeader } from "@/components/layouts/top-header";
 
 type NavItem = {
   label: string;
@@ -25,11 +26,20 @@ type LayoutOptions = {
   header?: ReactNode;
   actions?: ReactNode;
   sidebarTitle?: ReactNode;
+  searchPlaceholder?: string;
+  user?: HeaderUser;
+  hasNotificationDot?: boolean;
 };
 
 type ResponsiveLayoutProps = LayoutOptions & {
   children: ReactNode;
 };
+
+const DEFAULT_USER: HeaderUser = {
+  name: "John Doe",
+  email: "johndoe@gmail.com",
+};
+const DEFAULT_HEADER_HEIGHT = 112;
 
 function ResponsiveLayout({
   children,
@@ -37,13 +47,25 @@ function ResponsiveLayout({
   header,
   actions,
   sidebarTitle,
+  searchPlaceholder = "Search",
+  user,
+  hasNotificationDot = true,
 }: ResponsiveLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [headerHeight, setHeaderHeight] = useState<number | null>(null);
   const pathname = usePathname() ?? "/";
   const hasNav = Boolean(navItems?.length);
+  const userProfile = user ?? DEFAULT_USER;
+  const toggleSidebar = useCallback(() => setSidebarOpen(open => !open), []);
 
   const closeSidebar = useCallback(() => {
     setSidebarOpen(false);
+  }, []);
+
+  const handleHeaderHeight = useCallback((height: number) => {
+    setHeaderHeight(previous =>
+      previous !== null && Math.abs(previous - height) < 0.5 ? previous : height
+    );
   }, []);
 
   const renderNavItems = useCallback(
@@ -74,8 +96,12 @@ function ResponsiveLayout({
     [navItems, pathname]
   );
 
+  const mainTopOffset = `calc(${
+    headerHeight ?? DEFAULT_HEADER_HEIGHT
+  }px + 2.3rem)`;
+
   return (
-    <div className="relative flex h-screen w-screen overflow-hidden bg-gray-50 p-6 text-gray-600">
+    <div className="relative flex h-screen w-screen overflow-hidden dark:bg-black bg-white p-6 text-gray-600">
       {hasNav ? (
         <aside className="fixed top-6 bottom-6 left-6 z-40 hidden w-64 border-r border-gray-100 bg-white pb-8 pt-10 shadow-sm lg:flex">
           <div className="flex h-full w-full flex-col gap-6 overflow-y-auto px-6">
@@ -130,46 +156,23 @@ function ResponsiveLayout({
       ) : null}
 
       <div className="flex h-full w-full flex-col lg:pl-[calc(16rem+0.75rem)]">
-        <header
-          className={cn(
-            "fixed top-6 left-6 right-6 z-30 flex h-[88px] items-center border-b border-gray-100 bg-white/95 px-4 shadow-sm backdrop-blur transition-all lg:left-[calc(16rem+2.25rem)] lg:px-10"
-          )}
-        >
-          <div className="flex w-full items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              {hasNav ? (
-                <button
-                  type="button"
-                  className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-gray-100 text-gray-400 transition hover:bg-gray-50 hover:text-gray-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-200 focus-visible:ring-offset-2 focus-visible:ring-offset-white lg:hidden"
-                  onClick={() => setSidebarOpen(open => !open)}
-                  aria-label={
-                    sidebarOpen ? "Close navigation" : "Open navigation"
-                  }
-                  aria-expanded={sidebarOpen}
-                >
-                  {sidebarOpen ? (
-                    <X className="h-5 w-5" />
-                  ) : (
-                    <Menu className="h-5 w-5" />
-                  )}
-                </button>
-              ) : null}
-              <div className="text-xl font-semibold leading-tight text-gray-600">
-                {header}
-              </div>
-            </div>
-            {actions ? (
-              <div className="flex items-center gap-3 text-gray-500">
-                {actions}
-              </div>
-            ) : null}
-          </div>
-        </header>
+        <TopHeader
+          hasNav={hasNav}
+          sidebarOpen={sidebarOpen}
+          onToggleSidebar={toggleSidebar}
+          header={header}
+          actions={actions}
+          searchPlaceholder={searchPlaceholder}
+          hasNotificationDot={hasNotificationDot}
+          user={userProfile}
+          onHeightChange={handleHeaderHeight}
+        />
 
-        <main className="flex-1 overflow-y-auto bg-gray-50 pt-[100px]">
-          <div className="mx-auto h-full w-full max-w-6xl px-4 pb-12 pt-8 sm:px-6 lg:px-8">
-            {children}
-          </div>
+        <main
+          className="fixed left-6 right-6 bottom-6 overflow-y-auto lg:left-[calc(16rem+2.25rem)]"
+          style={{ top: mainTopOffset }}
+        >
+          <div className="h-full w-full no-scrollbar ">{children}</div>
         </main>
       </div>
     </div>
@@ -187,6 +190,9 @@ export function withResponsiveLayout<P extends Record<string, unknown>>(
         header={options?.header}
         actions={options?.actions}
         sidebarTitle={options?.sidebarTitle}
+        searchPlaceholder={options?.searchPlaceholder}
+        user={options?.user}
+        hasNotificationDot={options?.hasNotificationDot}
       >
         <Component {...props} />
       </ResponsiveLayout>
