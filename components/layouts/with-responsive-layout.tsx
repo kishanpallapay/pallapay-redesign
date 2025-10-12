@@ -2,10 +2,10 @@
 
 import {
   ComponentType,
+  CSSProperties,
   ReactElement,
   ReactNode,
   useCallback,
-  useEffect,
   useMemo,
   useState,
 } from "react";
@@ -76,9 +76,16 @@ function ResponsiveLayout({
     );
   }, []);
 
-  const mainTopOffset = `calc(${
-    headerHeight ?? DEFAULT_HEADER_HEIGHT
-  }px + 2.3rem)`;
+  const headerOffset = headerHeight ?? DEFAULT_HEADER_HEIGHT;
+
+  const mainOffsets = useMemo(
+    () =>
+      ({
+        "--main-offset-mobile": `${headerOffset}px`,
+        "--main-offset-desktop": `calc(${headerOffset}px + 2.3rem)`,
+      } as CSSProperties),
+    [headerOffset]
+  );
 
   return (
     <div className="relative flex h-screen w-screen overflow-hidden dark:bg-black bg-white md:p-6 text-gray-600">
@@ -129,8 +136,8 @@ function ResponsiveLayout({
         />
 
         <main
-          className="fixed left-6 right-6 bottom-6 overflow-y-auto no-scrollbar lg:left-[calc(16rem+2.25rem)]"
-          style={{ top: mainTopOffset }}
+          className="fixed left-6 right-6 bottom-6 top-[var(--main-offset-mobile)] overflow-y-auto no-scrollbar lg:left-[calc(16rem+2.25rem)] lg:top-[var(--main-offset-desktop)]"
+          style={mainOffsets}
         >
           <div className="h-full w-full no-scrollbar">{children}</div>
         </main>

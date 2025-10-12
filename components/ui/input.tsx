@@ -87,7 +87,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             onClick={onRightIconClick}
             className="focus:outline-none"
           >
-            <RightIconComponent className="w-4 h-4 text-gray-400 dark:text-gray-200" />
+            <RightIconComponent className="w-4 h-4 text-gray-400 dark:text-gray-300" />
           </button>
         );
       }
@@ -186,7 +186,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
               {/* Placeholder Label (positioned inside input when not floating) */}
               <label
                 className={`
-                  absolute font-exo2-regular group-hover:text-black dark:group-hover:text-white pointer-events-none z-20
+                  absolute font-exo2-regular group-hover:text-black text-gray-400 dark:text-gray-300 dark:group-hover:text-white pointer-events-none z-20
                   transition-all duration-200 ease-in-out origin-left
                   ${hasLeftIcon ? "left-9" : "left-3"}
                   ${
