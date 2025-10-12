@@ -9,6 +9,8 @@ interface InputProps
   className?: string;
   type?: string;
   icon?: React.ComponentType<{ className?: string }>;
+  rightIcon?: React.ComponentType<{ className?: string }>;
+  onRightIconClick?: () => void;
   state?: InputState;
   label?: string;
   placeholder?: string;
@@ -19,6 +21,7 @@ interface InputProps
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onFocus?: (e: React.FocusEvent<HTMLInputElement>) => void;
   onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
+  isFilled?: boolean;
 }
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
@@ -27,6 +30,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       className = "",
       type = "text",
       icon: IconComponent,
+      rightIcon: RightIconComponent,
+      onRightIconClick,
       label = "Username",
       placeholder = "Type your username",
       helperText = "",
@@ -37,6 +42,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       onFocus,
       onBlur,
       disabled = false,
+      isFilled = false,
       ...props
     },
     ref
@@ -73,10 +79,18 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       onBlur?.(e);
     };
 
-    const hasLeftIcon = !!renderLeftIcon();
-    const hasRightIcon = errorMessage || successMessage;
-
     const renderRightIcon = (): React.ReactNode => {
+      if (RightIconComponent) {
+        return (
+          <button
+            type="button"
+            onClick={onRightIconClick}
+            className="focus:outline-none"
+          >
+            <RightIconComponent className="w-4 h-4 text-gray-400 dark:text-gray-300" />
+          </button>
+        );
+      }
       if (successMessage) {
         return (
           <CheckCircle2 className="w-4 h-4 text-success-500 dark:text-success-200" />
@@ -89,6 +103,9 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       }
       return null;
     };
+
+    const hasLeftIcon = !!renderLeftIcon();
+    const hasRightIcon = !!renderRightIcon();
 
     // Determine border color based on state
     const getBorderClass = () => {
@@ -105,9 +122,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     };
 
     return (
-      <div
-        className={`w-full max-w-sm ${disabled ? "cursor-not-allowed" : ""}`}
-      >
+      <div className={`w-full ${disabled ? "cursor-not-allowed" : ""}`}>
         <div className="group relative">
           {/* Fieldset for border */}
           <fieldset
@@ -119,6 +134,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
               ${disabled ? "bg-gray-50 dark:bg-gray-500" : "bg-transparent"}
               ${errorMessage ? "!bg-error-50 dark:!bg-error-600" : ""}
               ${successMessage ? "!bg-success-50 dark:!bg-success-600" : ""}
+              ${isFilled ? "dark:!bg-gray-600" : ""}
             `}
           >
             {/* Legend - always present but with dynamic content */}
@@ -138,7 +154,9 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
                 ${disabled ? "text-gray-100 dark:text-gray-400" : ""}
               `}
             >
-              <span className=" text-transparent bg-transparent">{label}</span>
+              <span className=" text-transparent bg-transparent text-nowrap">
+                {label}
+              </span>
             </legend>
 
             <div className="relative">
@@ -168,7 +186,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
               {/* Placeholder Label (positioned inside input when not floating) */}
               <label
                 className={`
-                  absolute font-exo2-regular group-hover:text-black dark:group-hover:text-white pointer-events-none z-20
+                  absolute font-exo2-regular group-hover:text-black text-gray-400 dark:text-gray-300 dark:group-hover:text-white pointer-events-none z-20
                   transition-all duration-200 ease-in-out origin-left
                   ${hasLeftIcon ? "left-9" : "left-3"}
                   ${
@@ -230,7 +248,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
               mt-1 text-xs font-exo2-regular
               ${errorMessage ? "text-error-500 dark:text-error-200" : ""}
               ${successMessage ? "text-success-500 dark:text-success-200" : ""}
-              text-gray-300"
+              text-gray-300"}
             `}
           >
             {getHelperText()}

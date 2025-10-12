@@ -1,0 +1,86 @@
+[
+  {
+    "id": "home",
+    "label": "Home Page",
+    "href": "/dashboard",
+    "icon": "home",
+    "roles": ["merchant", "admin", "analyst"]
+  },
+  {
+    "id": "transactions",
+    "label": "Transactions",
+    "href": "/dashboard/transactions",
+    "icon": "transactions",
+    "roles": ["merchant", "admin"]
+  },
+  {
+    "id": "balances",
+    "label": "Balances",
+    "href": "/dashboard/balances",
+    "icon": "balances",
+    "roles": ["merchant", "admin", "analyst"]
+  },
+  {
+    "id": "crypto-withdrawals",
+    "label": "Crypto Withdrawals",
+    "href": "/dashboard/withdrawals/crypto",
+    "icon": "cryptoWithdrawals",
+    "roles": ["merchant", "admin"]
+  },
+  {
+    "id": "fiat-withdrawals",
+    "label": "Fiat Withdrawals",
+    "href": "/dashboard/withdrawals/fiat",
+    "icon": "fiatWithdrawals",
+    "roles": ["merchant", "admin"]
+  },
+  {
+    "id": "pos-devices",
+    "label": "POS Devices",
+    "href": "/dashboard/pos-devices",
+    "icon": "posDevices",
+    "roles": ["merchant"]
+  },
+  {
+    "id": "payment-link",
+    "label": "Payment Link",
+    "href": "/dashboard/payment-link",
+    "icon": "paymentLink",
+    "roles": ["merchant", "admin"]
+  },
+  {
+    "id": "payment-page",
+    "label": "Payment Page",
+    "href": "/dashboard/payment-page",
+    "icon": "paymentPage",
+    "roles": ["merchant", "admin"]
+  },
+  {
+    "id": "api-keys",
+    "label": "API Keys",
+    "href": "/dashboard/api-keys",
+    "icon": "apiKeys",
+    "roles": ["merchant", "developer"]
+  },
+  {
+    "id": "partnership",
+    "label": "Partnership",
+    "href": "/dashboard/partnership",
+    "icon": "partnership",
+    "roles": ["merchant", "admin"]
+  },
+  {
+    "id": "employees",
+    "label": "My Employees",
+    "href": "/dashboard/employees",
+    "icon": "employees",
+    "roles": ["admin", "merchant"]
+  },
+  {
+    "id": "account",
+    "label": "Account",
+    "href": "/dashboard/account",
+    "icon": "account",
+    "roles": ["merchant", "admin", "analyst", "developer"]
+  }
+]

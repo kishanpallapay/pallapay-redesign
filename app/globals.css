@@ -3,6 +3,26 @@
 @import "./fonts.css";
 @custom-variant dark (&:is(.dark *));
 
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  scrollbar-color: transparent transparent;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+.no-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.no-scrollbar::-webkit-scrollbar-thumb {
+  background: transparent;
+  border: none;
+}
+
 @theme inline {
   --breakpoint-mobile: 375px;
   --breakpoint-tablet: 768px;
@@ -10,8 +30,9 @@
   --breakpoint-desktop: 1440px;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-exo2);
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
   --font-exo2: var(--font-exo2);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
@@ -59,6 +80,7 @@
   --color-gray-300: var(--gray-300);
   --color-gray-400: var(--gray-400);
   --color-gray-500: var(--gray-500);
+  --color-gray-600: var(--gray-600);
   --color-black: var(--black);
   --color-white: var(--white);
 
@@ -173,8 +195,9 @@
   --orange-50: #fef1cc; /* Orange 50 */
   --orange-100: #fcd568; /* Orange 100 */
   --orange-200: #ffa600; /* Orange 200 */
-  --orange-300: #ff8400; /* Orange 300 */ 
---orange-400: #673500;
+  --orange-300: #ff8400; /* Orange 300 */
+  --orange-400: #673500; /* Orange 300 */
+
   /* Custom Secondary Colors - Light Mode */
   --gray: #2a2a2a; /* Main Gray */
   --gray-50: #f6f6f6; /* Gray 50 */
@@ -182,7 +205,8 @@
   --gray-200: #bebebe; /* Gray 200 */
   --gray-300: #9a9a9a; /* Gray 300 */
   --gray-400: #747474; /* Gray 400 */
-  --gray-500: #1d1d1d; /* Gray 500 */
+  --gray-500: #424242; /* Gray 500 */
+  --gray-600: #1d1d1d; /* Gray 600 */
   --black: #0c0c0c; /* Black */
   --white: #fefefe; /* White */
 
@@ -193,6 +217,7 @@
   --info-300: #73e2f8; /* Info 300 */
   --info-400: #47d8f5; /* Info 400 */
   --info-500: #0dcaf0; /* Info 500 */
+  --info-600: #008ca9; /* Info 600 */
 
   --success-50: #ebfff6; /* Success 50 */
   --success-100: #b9f8da; /* Success 100 */
@@ -200,6 +225,7 @@
   --success-300: #50bb89; /* Success 300 */
   --success-400: #309f6c; /* Success 400 */
   --success-500: #198754; /* Success 500 */
+  --success-600: #00562e; /* Success 600 */
 
   --error-50: #ffe8e8; /* Error 50 */
   --error-100: #ffc8cd; /* Error 100 */
@@ -207,6 +233,7 @@
   --error-300: #fb6f7c; /* Error 300 */
   --error-400: #eb4e5d; /* Error 400 */
   --error-500: #dc3545; /* Error 500 */
+  --error-600: #6b000a; /* Error 600 */
 
   --alert-50: #ffeeba; /* Alert 50 */
   --alert-100: #ffeeba; /* Alert 100 */
@@ -214,6 +241,7 @@
   --alert-300: #ffdd75; /* Alert 300 */
   --alert-400: #ffd042; /* Alert 400 */
   --alert-500: #ffc107; /* Alert 500 */
+  --alert-500: #b18400; /* Alert 600 */
 }
 
 .dark {
@@ -264,7 +292,8 @@
   --gray-200: #bebebe; /* Gray 200 */
   --gray-300: #9a9a9a; /* Gray 300 */
   --gray-400: #747474; /* Gray 400 */
-  --gray-500: #161616; /* Gray 500 */
+  --gray-500: #424242; /* Gray 500 */
+  --gray-600: #1d1d1d; /* Gray 500 */
   --black: #0c0c0c; /* Black */
   --white: #ffffff; /* White */
 
@@ -275,6 +304,7 @@
   --info-300: #2e7f8f; /* Info 300 */
   --info-400: #175e6c; /* Info 400 */
   --info-500: #003e4a; /* Info 500 */
+  --info-600: #002229; /* Info 600 */
 
   --success-50: #aeebcf; /* Success 50 */
   --success-100: #8ae4ba; /* Success 100 */
@@ -282,7 +312,7 @@
   --success-300: #368a63; /* Success 300 */
   --success-400: #1a6c46; /* Success 400 */
   --success-500: #004e28; /* Success 500 */
-  --success-600: #00150a; /* Success 600 */
+  --success-600: #002412; /* Success 600 */
 
   --error-50: #ffbbc1; /* Error 50 */
   --error-100: #ff98a2; /* Error 100 */
@@ -298,6 +328,7 @@
   --alert-300: #9f8330; /* Alert 300 */
   --alert-400: #7f6519; /* Alert 400 */
   --alert-500: #5e4700; /* Alert 500 */
+  --alert-600: #2c2100; /* Alert 500 */
 }
 
 @layer base {
@@ -306,6 +337,8 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-family: var(--font-exo2);
+    font-weight: 400;
   }
 }
 
@@ -330,11 +363,11 @@
   }
   .bg-orange-300 {
     background-color: var(--orange-300);
-  }  
-  
+  }
+
   .bg-orange-400 {
-      background-color: var(--orange-400);
-    }
+    background-color: var(--orange-400);
+  }
   .text-orange {
     color: var(--orange);
   }
@@ -389,6 +422,9 @@
   .bg-gray-500 {
     background-color: var(--gray-500);
   }
+  .bg-gray-600 {
+    background-color: var(--gray-600);
+  }
   .bg-black {
     background-color: var(--black);
   }
@@ -417,6 +453,9 @@
   .text-gray-500 {
     color: var(--gray-500);
   }
+  .text-gray-600 {
+    color: var(--gray-600);
+  }
   .text-black {
     color: var(--black);
   }
@@ -442,6 +481,9 @@
   }
   .bg-info-500 {
     background-color: var(--info-500);
+  }
+  .bg-info-600 {
+    background-color: var(--info-600);
   }
 
   .bg-success-50 {
@@ -506,6 +548,9 @@
   .bg-alert-500 {
     background-color: var(--alert-500);
   }
+  .bg-alert-500 {
+    background-color: var(--alert-600);
+  }
 
   /* Text colors for states */
   .text-info-50 {
@@ -525,6 +570,9 @@
   }
   .text-info-500 {
     color: var(--info-500);
+  }
+  .text-info-600 {
+    color: var(--info-600);
   }
 
   .text-success-50 {
@@ -570,6 +618,7 @@
   .text-error-600 {
     color: var(--error-600);
   }
+
   .text-alert-50 {
     color: var(--alert-50);
   }
@@ -588,6 +637,10 @@
   .text-alert-500 {
     color: var(--alert-500);
   }
+  .text-alert-600 {
+    color: var(--alert-600);
+  }
+
   /* Custom font sizes */
   .text-xxs {
     font-size: var(--font-size-xxs); /* 11px / 0.6875rem */
@@ -637,5 +690,5 @@
   .text-display-2xl {
     font-size: var(--font-size-display-2xl); /* 72px / 4.5rem */
     line-height: 5rem;
-  }                                                                                                                                                           }
-
+  }
+}
