@@ -31,8 +31,8 @@ function AuthSwitchComponent({
   return (
     <div
       className={cn(
-        "inline-flex w-full max-w-xs items-center rounded-[12px] border border-border bg-background/40 p-2 text-sm",
-        "shadow-sm backdrop-blur-sm md:max-w-sm",
+        "inline-flex w-full max-w-xs items-center rounded-[12px] border-1 border-gray-100 dark:border-gray-500 p-2 text-sm",
+
         className
       )}
     >
@@ -43,8 +43,8 @@ function AuthSwitchComponent({
           "flex-1 rounded-[8px] px-4 py-3 font-semibold transition-colors duration-200",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
           isLeftActive
-            ? "shadow-sm bg-gray-50 dark:bg-gray-600 text-black dark:text-white "
-            : "text-gray-500"
+            ? " bg-gray-50 dark:bg-gray-600 text-black dark:text-white "
+            : "text-gray-100 dark:text-gray-500"
         )}
       >
         {leftButton.label}
@@ -56,8 +56,8 @@ function AuthSwitchComponent({
           "flex-1 rounded-[8px] px-4 py-3 font-semibold transition-colors duration-200",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
           isRightActive
-            ? "shadow-sm bg-gray-50 dark:bg-gray-600 text-black dark:text-white "
-            : "text-gray-500"
+            ? " bg-gray-50 dark:bg-gray-600 text-black dark:text-white "
+            : "text-gray-100 dark:text-gray-500"
         )}
       >
         {rightButton.label}

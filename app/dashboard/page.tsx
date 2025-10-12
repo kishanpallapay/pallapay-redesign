@@ -1,19 +1,14 @@
 "use client";
 
 import {
-  Activity,
   ArrowDownRight,
   ArrowUpRight,
   CreditCard,
-  Home,
-  Settings,
   TrendingUp,
-  Users,
   Wallet,
 } from "lucide-react";
 
 import { withResponsiveLayout } from "@/components/layouts/with-responsive-layout";
-import type { NavItem } from "@/components/layouts/with-responsive-layout";
 import { cn } from "../../lib/utils";
 
 function DashboardContent() {
@@ -239,16 +234,13 @@ function DashboardContent() {
   );
 }
 
-const navItems: NavItem[] = [
-  { label: "Overview", href: "/dashboard", icon: Home },
-  { label: "Customers", href: "/dashboard/customers", icon: Users },
-  { label: "Analytics", href: "/dashboard/analytics", icon: Activity },
-  { label: "Settings", href: "/dashboard/settings", icon: Settings },
-];
-
 export default withResponsiveLayout(DashboardContent, {
-  navItems,
-  header: <span className="font-semibold">Pallapay Dashboard</span>,
+  role: "merchant",
+  header: (
+    <span className="font-exo2-semibold text-black dark:text-white">
+      Pallapay Dashboard
+    </span>
+  ),
   sidebarTitle: (
     <span className="text-sm font-semibold uppercase">Navigation</span>
   ),

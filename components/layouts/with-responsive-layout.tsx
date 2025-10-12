@@ -2,16 +2,19 @@
 
 import {
   ComponentType,
+  CSSProperties,
   ReactElement,
   ReactNode,
+  useCallback,
   useMemo,
   useState,
 } from "react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { Menu, X } from "lucide-react";
+import { X } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+import { getNavItemsForRole } from "@/lib/navigation/get-nav-items";
+import { HeaderUser, TopHeader } from "@/components/layouts/top-header";
+import { SidebarNav } from "./sidebar-nav";
 
 type NavItem = {
   label: string;
@@ -22,119 +25,123 @@ type NavItem = {
 
 type LayoutOptions = {
   navItems?: NavItem[];
+  role?: string;
   header?: ReactNode;
   actions?: ReactNode;
   sidebarTitle?: ReactNode;
+  searchPlaceholder?: string;
+  user?: HeaderUser;
+  hasNotificationDot?: boolean;
 };
 
 type ResponsiveLayoutProps = LayoutOptions & {
   children: ReactNode;
 };
 
+const DEFAULT_USER: HeaderUser = {
+  name: "John Doe",
+  email: "johndoe@gmail.com",
+};
+const DEFAULT_HEADER_HEIGHT = 112;
+
 function ResponsiveLayout({
   children,
-  navItems = [],
+  navItems: customNavItems,
+  role,
   header,
   actions,
   sidebarTitle,
+  searchPlaceholder = "Search",
+  user,
+  hasNotificationDot = true,
 }: ResponsiveLayoutProps) {
-  const pathname = usePathname();
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [headerHeight, setHeaderHeight] = useState<number | null>(null);
+  const resolvedNavItems = useMemo(() => {
+    if (customNavItems?.length) return customNavItems;
+    return getNavItemsForRole(role);
+  }, [customNavItems, role]);
 
-  const computedTitle = useMemo(
+  const hasNav = resolvedNavItems.length > 0;
+  const userProfile = user ?? DEFAULT_USER;
+  const toggleSidebar = useCallback(() => setSidebarOpen(open => !open), []);
+
+  const closeSidebar = useCallback(() => {
+    setSidebarOpen(false);
+  }, []);
+
+  const handleHeaderHeight = useCallback((height: number) => {
+    setHeaderHeight(previous =>
+      previous !== null && Math.abs(previous - height) < 0.5 ? previous : height
+    );
+  }, []);
+
+  const headerOffset = headerHeight ?? DEFAULT_HEADER_HEIGHT;
+
+  const mainOffsets = useMemo(
     () =>
-      sidebarTitle ??
-      header ?? <span className="text-lg font-semibold">Menu</span>,
-    [header, sidebarTitle]
+      ({
+        "--main-offset-mobile": `${headerOffset}px`,
+        "--main-offset-desktop": `calc(${headerOffset}px + 2.3rem)`,
+      } as CSSProperties),
+    [headerOffset]
   );
 
-  const renderNavItems = () =>
-    navItems.map(item => {
-      const Icon = item.icon;
-      const isActive =
-        item.href === "/"
-          ? pathname === item.href
-          : pathname?.startsWith(item.href ?? "");
-
-      return (
-        <Link
-          key={item.href}
-          href={item.href}
-          className={cn(
-            "group flex items-center justify-between rounded-xl px-3 py-2 text-sm font-medium transition-colors",
-            isActive
-              ? "bg-primary text-primary-foreground shadow-sm"
-              : "text-muted-foreground hover:bg-muted/40 hover:text-foreground"
-          )}
-          onClick={() => setIsSidebarOpen(false)}
-        >
-          <span className="flex items-center gap-3">
-            {Icon ? <Icon className="h-4 w-4" /> : null}
-            {item.label}
-          </span>
-          {item.trailing}
-        </Link>
-      );
-    });
-
   return (
-    <div className="flex min-h-screen flex-col bg-background text-foreground">
-      <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-border bg-card px-4 shadow-sm backdrop-blur md:h-20 md:px-6">
-        <div className="flex items-center gap-3">
-          <button
-            type="button"
-            aria-label="Open navigation"
-            className="inline-flex items-center justify-center rounded-lg border border-border bg-background p-2 text-foreground transition hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary md:hidden"
-            onClick={() => setIsSidebarOpen(true)}
-          >
-            <Menu className="h-5 w-5" />
-          </button>
-          <div className="flex items-center gap-2 text-lg font-semibold md:text-xl">
-            {header ?? <span>Dashboard</span>}
-          </div>
-        </div>
-
-        <div className="flex items-center gap-3">{actions}</div>
-      </header>
-
-      <div className="flex flex-1 overflow-hidden">
-        <aside className="hidden w-72 flex-shrink-0 flex-col border-r border-border bg-card/60 px-4 pb-6 pt-8 backdrop-blur-md md:flex">
-          <div className="mb-6 px-1 text-sm font-semibold uppercase tracking-widest text-muted-foreground">
-            {computedTitle}
-          </div>
-          <nav className="flex-1 space-y-1">{renderNavItems()}</nav>
+    <div className="relative flex h-screen w-screen overflow-hidden dark:bg-black bg-white md:p-6 text-gray-600">
+      {hasNav ? (
+        <aside className="fixed top-6 bottom-6 left-6 z-40 hidden w-64 lg:flex">
+          <SidebarNav items={resolvedNavItems} title={sidebarTitle} />
         </aside>
+      ) : null}
 
-        <main className="flex-1 overflow-y-auto bg-background px-4 py-6 md:px-8 md:py-8">
-          <div className="mx-auto w-full max-w-6xl">{children}</div>
+      {hasNav ? (
+        <div
+          className={cn(
+            "fixed inset-0 z-50 bg-gray-900/10 backdrop-blur-sm transition-all duration-200 lg:hidden",
+            sidebarOpen
+              ? "pointer-events-auto opacity-100"
+              : "pointer-events-none opacity-0"
+          )}
+          role="presentation"
+          onClick={closeSidebar}
+        >
+          <aside
+            className={cn(
+              "flex h-screen w-[min(80vw,256px)] flex-col transition-transform duration-200",
+              sidebarOpen ? "translate-x-0" : "-translate-x-full"
+            )}
+            onClick={event => event.stopPropagation()}
+          >
+            <SidebarNav
+              items={resolvedNavItems}
+              title={sidebarTitle}
+              onNavigate={closeSidebar}
+            />
+          </aside>
+        </div>
+      ) : null}
+
+      <div className="flex h-full w-full flex-col lg:pl-[calc(16rem+0.75rem)]">
+        <TopHeader
+          hasNav={hasNav}
+          sidebarOpen={sidebarOpen}
+          onToggleSidebar={toggleSidebar}
+          header={header}
+          actions={actions}
+          searchPlaceholder={searchPlaceholder}
+          hasNotificationDot={hasNotificationDot}
+          user={userProfile}
+          onHeightChange={handleHeaderHeight}
+        />
+
+        <main
+          className="fixed left-6 right-6 bottom-6 top-[var(--main-offset-mobile)] overflow-y-auto no-scrollbar lg:left-[calc(16rem+2.25rem)] lg:top-[var(--main-offset-desktop)]"
+          style={mainOffsets}
+        >
+          <div className="h-full w-full no-scrollbar">{children}</div>
         </main>
       </div>
-
-      {/* Mobile sidebar */}
-      {isSidebarOpen ? (
-        <>
-          <div
-            className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm md:hidden"
-            onClick={() => setIsSidebarOpen(false)}
-          />
-          <aside className="fixed inset-y-0 left-0 z-50 flex w-72 max-w-full flex-col border-r border-border bg-card shadow-xl md:hidden">
-            <div className="flex items-center justify-between border-b border-border px-4 py-4">
-              <div className="text-base font-semibold">{computedTitle}</div>
-              <button
-                type="button"
-                aria-label="Close navigation"
-                className="rounded-lg border border-border bg-background p-2 text-foreground transition hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                onClick={() => setIsSidebarOpen(false)}
-              >
-                <X className="h-5 w-5" />
-              </button>
-            </div>
-            <nav className="flex-1 space-y-1 overflow-y-auto px-4 py-4">
-              {renderNavItems()}
-            </nav>
-          </aside>
-        </>
-      ) : null}
     </div>
   );
 }
@@ -147,9 +154,13 @@ export function withResponsiveLayout<P extends Record<string, unknown>>(
     return (
       <ResponsiveLayout
         navItems={options?.navItems}
+        role={options?.role}
         header={options?.header}
         actions={options?.actions}
         sidebarTitle={options?.sidebarTitle}
+        searchPlaceholder={options?.searchPlaceholder}
+        user={options?.user}
+        hasNotificationDot={options?.hasNotificationDot}
       >
         <Component {...props} />
       </ResponsiveLayout>
