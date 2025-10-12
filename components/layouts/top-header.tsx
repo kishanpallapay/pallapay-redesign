@@ -82,14 +82,14 @@ export function TopHeader({
     <header
       ref={headerRef}
       className={cn(
-        "fixed top-6 left-6 right-6 z-30 transition-all",
+        "fixed z-30 transition-all w-full",
         hasNav ? "lg:left-[calc(16rem+2.25rem)]" : "",
         className
       )}
       style={style}
       {...rest}
     >
-      <div className="w-full rounded-[12px] bg-gray-50 dark:bg-gray-600 px-4 py-4  sm:px-4 sm:py-2 md:py-4 md:pl-3.5 md:pr-6">
+      <div className="w-full  md:rounded-[12px] bg-gray-50 dark:bg-gray-600 px-4 py-4  sm:px-4 sm:py-2 md:py-4 md:pl-3.5 md:pr-6">
         <div className="flex w-full flex-wrap items-center gap-4 md:flex-nowrap md:gap-6">
           <div className="flex w-full flex-wrap items-center justify-between gap-4 md:flex-nowrap md:gap-6">
             <div className="flex flex-1 items-center gap-2 md:gap-4">
