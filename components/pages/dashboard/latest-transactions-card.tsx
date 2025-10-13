@@ -171,6 +171,13 @@ export function LatestTransactionsCard(): JSX.Element {
           onRowClick={handleMobileRowClick}
         />
       </div>
+      <button
+        type="button"
+        className="flex mt-4 gap-2 text-md font-semibold text-orange-200 font-exo2-medium transition hover:text-orange hover:cursor-pointer w-full justify-center items-center flex md:hidden"
+      >
+        See all Transactions
+        <ArrowRight className="h-4.5 w-4.5" aria-hidden />
+      </button>
     </section>
   );
 }

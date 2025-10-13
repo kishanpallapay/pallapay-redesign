@@ -291,20 +291,21 @@ export function TransactionsValueCard(): JSX.Element {
     return `${currencyMeta.axisFormatter.format(value)} ${currencyMeta.label}`;
   };
 
-  return (
-    <section className="flex h-full w-full flex-col rounded-2xl bg-gray-50 dark:bg-gray-600 p-4 sm:p-6 transition-colors duration-200">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-4 mb-6">
-        <div className="flex-1">
-          <p className="font-exo2-medium text-base sm:text-lg text-black dark:text-white transition-colors duration-200">
-            Transactions Value
-          </p>
-        </div>
+  const switchClassName =
+    view === "usd"
+      ? "border-orange-200 bg-orange-100/60 text-orange-500 dark:border-orange-300/60 dark:bg-orange-300/20"
+      : "border-gray-200 bg-gray-200/60 text-gray-600 dark:border-gray-400 dark:bg-gray-500/40";
 
-        {/* This Week Button */}
+  return (
+    <section className="flex h-full w-full flex-col rounded-[32px] bg-[#F9F9F7] p-5 sm:p-6 shadow-sm transition-colors duration-200 dark:bg-gray-600">
+      {/* Header */}
+      <div className="mb-6 flex items-start justify-between gap-3 sm:mb-8">
+        <p className="font-exo2-semibold text-lg text-black sm:text-xl dark:text-white transition-colors duration-200">
+          Transactions Value
+        </p>
         <button
           type="button"
-          className="flex items-center justify-center gap-2  text-xs sm:text-sm font-exo2-semibold text-black dark:text-white transition-all duration-200  flex-shrink-0"
+          className="flex items-center gap-1.5 rounded-full border border-transparent bg-transparent px-3 py-1 text-xs font-exo2-semibold text-black transition-colors duration-200 hover:border-black/10 dark:text-white"
         >
           This Week
           <ChevronDown className="h-4 w-4" aria-hidden />
@@ -312,12 +313,12 @@ export function TransactionsValueCard(): JSX.Element {
       </div>
 
       {/* Total Balance Section */}
-      <div className="flex flex-col sm:flex-row sm:items-center  sm:justify-start gap-6 mb-6 sm:mb-8">
-        <div className="flex items-end gap-2 sm:gap-3 flex-wrap">
-          <span className="text-3xl font-exo2-semibold text-black dark:text-white transition-colors duration-200">
+      <div className="mb-6 flex items-end justify-between gap-4 sm:mb-8 sm:items-center">
+        <div className="flex items-end gap-2">
+          <span className="text-3xl font-exo2-semibold leading-none text-black sm:text-4xl dark:text-white transition-colors duration-200">
             {formattedTotal}
           </span>
-          <span className="text-lg font-exo2-medium text-black dark:text-white transition-colors duration-200">
+          <span className="text-base font-exo2-medium text-black sm:text-lg dark:text-white transition-colors duration-200">
             {currencyMeta.label}
           </span>
         </div>
@@ -325,7 +326,8 @@ export function TransactionsValueCard(): JSX.Element {
         {/* Toggle Button */}
         <Switch
           size="lg"
-          variant="filled"
+          variant="outline"
+          className={`${switchClassName}`}
           checked={view === "usd"}
           onCheckedChange={handleSwitchChange}
           showText
@@ -336,13 +338,13 @@ export function TransactionsValueCard(): JSX.Element {
       </div>
 
       {/* Chart */}
-      <div className="mb-6 h-56 sm:h-64 lg:h-72 w-full -mx-4 sm:-mx-6 px-4 sm:px-6 flex-1">
+      <div className="mb-6 flex-1 w-full rounded-3xl px-4 py-5  sm:px-6 sm:py-6 min-h-[220px] sm:min-h-[260px]">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
             data={data}
             barCategoryGap="24%"
             barGap={8}
-            margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
+            margin={{ top: 10, right: 0, left: -20, bottom: 0 }}
           >
             <CartesianGrid
               strokeDasharray="4 4"

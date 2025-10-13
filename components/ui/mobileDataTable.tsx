@@ -197,14 +197,14 @@ export function MobileDataTable({
   const mergedCryptoIcons = { ...DEFAULT_CRYPTO_ICONS, ...cryptoIcons };
 
   return (
-    <div className="overflow-hidden rounded-lg bg-white dark:bg-gray-700">
+    <div className="overflow-hidden rounded-lg">
       <Table className="table-auto text-sm">
         <TableHeader className="bg-gray-50 dark:bg-gray-600">
           <TableRow className="border-none">
             {columns.map(column => (
               <TableHead
                 key={column.key}
-                className={`px-4 py-3 text-xs font-exo2-medium uppercase tracking-wide text-gray-600 dark:text-gray-300 !whitespace-normal leading-tight ${
+                className={`px-2 py-3 text-xs font-exo2-medium uppercase tracking-wide text-gray-600 dark:text-gray-300 !whitespace-normal leading-tight ${
                   column.align === "right"
                     ? "text-right"
                     : column.align === "center"
