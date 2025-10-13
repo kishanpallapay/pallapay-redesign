@@ -77,7 +77,7 @@ export function TransactionsStatusCard(): JSX.Element {
   );
 
   return (
-    <section className="rounded-[12px] bg-gray-50 p-6 dark:bg-gray-600">
+    <section className="rounded-[12px] bg-gray-50 p-6 dark:bg-gray-600 h-full">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <p className="font-exo2-medium text-lg text-gray dark:text-gray-50">
