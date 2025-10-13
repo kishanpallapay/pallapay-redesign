@@ -14,7 +14,13 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import { SmartPagination } from "@/components/ui/pagination";
-import { MoreVertical, ChevronRight, Filter, Download, Search } from "lucide-react";
+import {
+  MoreVertical,
+  ChevronRight,
+  Filter,
+  Download,
+  Search,
+} from "lucide-react";
 import Btc from "@/components/icons/crypto/Btc";
 import Eth from "@/components/icons/crypto/Eth";
 import Ltc from "@/components/icons/crypto/Ltc";
@@ -169,7 +175,7 @@ const transactions: Transaction[] = [
   },
 ];
 
-const statusVariant: { [key: string]: StatusVariants; } = {
+const statusVariant: { [key: string]: StatusVariants } = {
   Success: "success",
   Processing: "process",
   Failed: "destructive",
@@ -258,16 +264,22 @@ function TransactionsContent() {
 
   return (
     <Drawer>
-      <div className="container mx-auto p-5 rounded-2xl bg-gray-50 dark:bg-gray-600 text-foreground">
+      <div className="w-full p-5 rounded-2xl bg-gray-50 dark:bg-gray-600 text-foreground">
         {/* Desktop Header */}
         <div className="hidden md:flex items-center justify-between mb-4 ">
           <h1 className="text-2xl font-bold">All Transactions</h1>
           <div className="flex items-center gap-2">
-            <Button variant="outline" className="text-foreground border-foreground">
+            <Button
+              variant="outline"
+              className="text-foreground border-foreground"
+            >
               <Filter className="h-4 w-4 mr-2" />
               Filter
             </Button>
-            <Button variant="outline" className="text-foreground border-foreground">
+            <Button
+              variant="outline"
+              className="text-foreground border-foreground"
+            >
               <Download className="h-4 w-4 mr-2" />
               Export Data
             </Button>
@@ -300,13 +312,14 @@ function TransactionsContent() {
           </div>
           <div>
             <SmartPagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
-            itemsPerPage={itemsPerPage}
-            onItemsPerPageChange={setItemsPerPage}
-            perPageOptions={[5, 10, 15]}
-          /></div>
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={setCurrentPage}
+              itemsPerPage={itemsPerPage}
+              onItemsPerPageChange={setItemsPerPage}
+              perPageOptions={[5, 10, 15]}
+            />
+          </div>
         </div>
         {selectedTransaction && (
           <DrawerContent>
@@ -318,19 +331,34 @@ function TransactionsContent() {
             <div className="px-4 py-4 grid gap-4">
               {[
                 { label: "Ref ID", value: selectedTransaction.refId },
-                { label: "Payment Amount", value: selectedTransaction.paymentAmount },
-                { label: "Crypto Amount", value: selectedTransaction.cryptoAmount },
+                {
+                  label: "Payment Amount",
+                  value: selectedTransaction.paymentAmount,
+                },
+                {
+                  label: "Crypto Amount",
+                  value: selectedTransaction.cryptoAmount,
+                },
                 { label: "Type", value: selectedTransaction.type },
                 { label: "Date of Create", value: selectedTransaction.date },
-              ].map((item) => (
-                <div key={item.label} className="grid grid-cols-2 items-center gap-4">
-                  <span className="text-left font-medium text-gray-500 dark:text-gray-400">{item.label} :</span>
-                  <span className="text-left font-semibold text-gray-800 dark:text-gray-100">{item.value}</span>
+              ].map(item => (
+                <div
+                  key={item.label}
+                  className="grid grid-cols-2 items-center gap-4"
+                >
+                  <span className="text-left font-medium text-gray-500 dark:text-gray-400">
+                    {item.label} :
+                  </span>
+                  <span className="text-left font-semibold text-gray-800 dark:text-gray-100">
+                    {item.value}
+                  </span>
                 </div>
               ))}
 
               <div className="grid grid-cols-2 items-center gap-4">
-                <span className="text-left font-medium text-gray-500 dark:text-gray-400">Status :</span>
+                <span className="text-left font-medium text-gray-500 dark:text-gray-400">
+                  Status :
+                </span>
                 <Badge variant={statusVariant[selectedTransaction.status]}>
                   {selectedTransaction.status}
                 </Badge>
@@ -341,9 +369,12 @@ function TransactionsContent() {
                   variant="outline"
                   size="sm"
                   className="flex items-center gap-1 text-foreground border-foreground w-full"
-                  onClick={() => router.push(`/transactions/${selectedTransaction.refId}`)}
-                >Show More Detail</Button>
-
+                  onClick={() =>
+                    router.push(`/transactions/${selectedTransaction.refId}`)
+                  }
+                >
+                  Show More Detail
+                </Button>
               </div>
             </div>
           </DrawerContent>
