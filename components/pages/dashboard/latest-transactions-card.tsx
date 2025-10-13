@@ -1,151 +1,175 @@
 "use client";
 
-import { JSX, type ComponentProps } from "react";
+import type { JSX } from "react";
+
 import { ArrowRight } from "lucide-react";
 
-import { Badge } from "@/components/ui/badge";
+import { DataTable, type ColumnConfig } from "@/components/ui/dataTable";
+import { MobileDataTable } from "@/components/ui/mobileDataTable";
 
 type TransactionStatus = "completed" | "processing" | "canceled" | "failed";
+type PaymentChannel = "Payment Link" | "Payment Page" | "API" | "POS";
+type CryptoSymbol = "USDT" | "ETH" | "TRX" | "BTC";
 
 type LatestTransaction = {
   id: string;
-  paymentAmount: string;
+  paymentAmount: number;
   fiatCurrency: string;
-  cryptoAmount: string;
-  cryptoSymbol: string;
-  channel: "Payment Link" | "Payment Page" | "API" | "POS";
+  cryptoAmount: number;
+  cryptoSymbol: CryptoSymbol;
+  channel: PaymentChannel;
   status: TransactionStatus;
+  occurredAt: string;
 };
 
-const STATUS_LABELS: Record<TransactionStatus, string> = {
-  completed: "Completed",
-  processing: "Processing",
-  canceled: "Canceled",
-  failed: "Rejected",
-};
+const LATEST_TRANSACTION_COLUMNS: ColumnConfig[] = [
+  {
+    key: "id",
+    label: "Ref ID",
+    type: "text",
+  },
+  {
+    key: "paymentAmount",
+    label: "Payment Amount",
+    type: "currency",
+  },
+  {
+    key: "cryptoAmount",
+    label: "Crypto Amount",
+    type: "crypto",
+  },
+  {
+    key: "channel",
+    label: "Type",
+    type: "text",
+  },
+  {
+    key: "status",
+    label: "Status",
+    type: "status",
+  },
+  {
+    key: "occurredAt",
+    label: "Date",
+    type: "date",
+  },
+];
 
-const STATUS_VARIANTS: Record<
-  TransactionStatus,
-  ComponentProps<typeof Badge>["variant"]
-> = {
-  completed: "success",
-  processing: "process",
-  canceled: "default",
-  failed: "destructive",
-};
+// Mobile columns - 3 columns only
+const MOBILE_TRANSACTION_COLUMNS: ColumnConfig[] = [
+  {
+    key: "id",
+    label: "Ref ID",
+    type: "text",
+  },
+  {
+    key: "paymentAmount",
+    label: "Payment Amount",
+    type: "currency",
+  },
+  {
+    key: "status",
+    label: "Status",
+    type: "status",
+  },
+];
 
 const LATEST_TRANSACTIONS: LatestTransaction[] = [
   {
     id: "123456789012",
-    paymentAmount: "12,550",
+    paymentAmount: 12550,
     fiatCurrency: "AED",
-    cryptoAmount: "455.68709",
+    cryptoAmount: 455.68709,
     cryptoSymbol: "USDT",
     channel: "Payment Link",
-    status: "completed",
+    status: "failed",
+    occurredAt: "2025-08-19T12:43:00Z",
   },
   {
-    id: "123456789013",
-    paymentAmount: "24,500",
+    id: "987654321098",
+    paymentAmount: 24800,
     fiatCurrency: "AED",
-    cryptoAmount: "0.01356",
+    cryptoAmount: 0.01563,
     cryptoSymbol: "ETH",
     channel: "API",
-    status: "processing",
+    status: "completed",
+    occurredAt: "2025-08-18T09:18:00Z",
   },
   {
-    id: "123456789014",
-    paymentAmount: "9,800",
+    id: "543216789012",
+    paymentAmount: 7800,
     fiatCurrency: "AED",
-    cryptoAmount: "4,500.55",
+    cryptoAmount: 3420.45,
     cryptoSymbol: "TRX",
     channel: "Payment Page",
-    status: "failed",
+    status: "processing",
+    occurredAt: "2025-08-18T07:25:00Z",
   },
   {
-    id: "123456789015",
-    paymentAmount: "15,200",
+    id: "112233445566",
+    paymentAmount: 15200,
     fiatCurrency: "AED",
-    cryptoAmount: "325.11",
-    cryptoSymbol: "USDT",
+    cryptoAmount: 0.182,
+    cryptoSymbol: "BTC",
     channel: "POS",
     status: "completed",
+    occurredAt: "2025-08-17T17:05:00Z",
   },
   {
-    id: "123456789016",
-    paymentAmount: "7,000",
+    id: "998877665544",
+    paymentAmount: 9100,
     fiatCurrency: "AED",
-    cryptoAmount: "0.182",
-    cryptoSymbol: "BTC",
+    cryptoAmount: 312.09,
+    cryptoSymbol: "USDT",
     channel: "API",
     status: "canceled",
+    occurredAt: "2025-08-17T11:46:00Z",
   },
 ];
 
+const handleRowMenuClick = (_transaction: LatestTransaction) => {
+  console.log("Desktop row clicked:", _transaction);
+};
+
+const handleMobileRowClick = (_transaction: LatestTransaction) => {
+  console.log("Mobile row clicked:", _transaction);
+};
+
 export function LatestTransactionsCard(): JSX.Element {
   return (
-    <section className="rounded-[12px] bg-gray-50 p-6 dark:bg-gray-600">
-      <div className="flex flex-wrap items-start justify-between gap-4">
+    <section className="rounded-[12px] bg-gray-50  md:px-6 md:pt-6 p-3 dark:bg-gray-600">
+      <div className="flex flex-wrap items-start mb-8 justify-between gap-4">
         <div>
           <p className="font-exo2-medium text-lg text-gray dark:text-gray-50">
-            Latest Transactions
-          </p>
-          <p className="text-sm font-exo2-medium text-gray-300">
-            Recent payments across channels
+            Latest Transactions:
           </p>
         </div>
+
         <button
           type="button"
-          className="flex items-center gap-2 text-sm font-semibold text-orange-300 transition hover:text-orange"
+          className="flex items-center gap-2 text-md font-semibold text-orange-200 font-exo2-medium transition hover:text-orange hover:cursor-pointer md:flex hidden"
         >
           See all Transactions
-          <ArrowRight className="h-4 w-4" aria-hidden />
+          <ArrowRight className="h-4.5 w-4.5" aria-hidden />
         </button>
       </div>
 
-      <div className="mt-6 space-y-4">
-        <div className="hidden grid-cols-[1.4fr,1fr,1fr,1fr,auto] items-center text-xs uppercase tracking-wide text-gray-300 md:grid">
-          <span>Ref ID</span>
-          <span>Payment Amount</span>
-          <span>Crypto Amount</span>
-          <span>Channel</span>
-          <span className="text-right">Status</span>
-        </div>
-        <div className="divide-y divide-gray-100 dark:divide-gray-500/30">
-          {LATEST_TRANSACTIONS.map(transaction => (
-            <div
-              key={transaction.id}
-              className="grid grid-cols-1 gap-3 py-4 md:grid-cols-[1.4fr,1fr,1fr,1fr,auto] md:items-center md:gap-4"
-            >
-              <div>
-                <p className="text-sm font-semibold text-gray-900 dark:text-white">
-                  {transaction.id}
-                </p>
-                <p className="mt-1 text-xs text-gray-400 md:hidden">
-                  {transaction.channel}
-                </p>
-              </div>
-              <div className="text-sm font-medium text-gray-900 dark:text-white">
-                {transaction.paymentAmount} {transaction.fiatCurrency}
-              </div>
-              <div className="text-sm text-gray-500 dark:text-gray-300">
-                {transaction.cryptoAmount} {transaction.cryptoSymbol}
-              </div>
-              <div className="hidden text-sm font-medium text-gray-500 dark:text-gray-300 md:block">
-                {transaction.channel}
-              </div>
-              <div className="flex items-center justify-between md:justify-end">
-                <Badge variant={STATUS_VARIANTS[transaction.status]}>
-                  {STATUS_LABELS[transaction.status]}
-                </Badge>
-                <ArrowRight
-                  className="h-4 w-4 text-gray-300 md:hidden"
-                  aria-hidden
-                />
-              </div>
-            </div>
-          ))}
-        </div>
+      {/* Desktop View */}
+      <div className="hidden md:block">
+        <DataTable
+          columns={LATEST_TRANSACTION_COLUMNS}
+          data={LATEST_TRANSACTIONS}
+          onRowMenuClick={handleRowMenuClick}
+        />
+      </div>
+
+      {/* Mobile View */}
+      <div className="md:hidden block">
+        <MobileDataTable
+          columns={MOBILE_TRANSACTION_COLUMNS}
+          data={LATEST_TRANSACTIONS}
+          onRowClick={handleMobileRowClick}
+        />
       </div>
     </section>
   );

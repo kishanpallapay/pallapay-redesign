@@ -9,8 +9,8 @@ import { JSX } from "react";
 
 function DashboardHomeContent(): JSX.Element {
   return (
-    <div className="space-y-6">
-      <div className="grid gap-6 lg:grid-cols-12">
+    <div className="space-y-4">
+      <div className="grid gap-4 lg:grid-cols-12">
         <div className="h-full lg:col-span-5">
           <EstimatedBalanceCard />
         </div>
@@ -19,7 +19,7 @@ function DashboardHomeContent(): JSX.Element {
         </div>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-12">
+      <div className="grid gap-4 lg:grid-cols-12">
         <div className="order-2 lg:order-none lg:col-span-7">
           <LatestTransactionsCard />
         </div>
