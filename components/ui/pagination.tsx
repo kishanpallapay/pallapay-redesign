@@ -25,7 +25,7 @@ const PaginationSelect = ({
 }) => {
   return (
     <Select value={value} onValueChange={onChange}>
-      <SelectTrigger className="border-gray-100 text-gray-700">
+      <SelectTrigger className="border-gray-100 text-gray-700 dark:text-gray-50">
         <SelectValue placeholder={`${value} / Page`} />
       </SelectTrigger>
       <SelectContent>
