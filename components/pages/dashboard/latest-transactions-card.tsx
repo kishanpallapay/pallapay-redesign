@@ -5,7 +5,11 @@ import type { JSX } from "react";
 import { ArrowRight } from "lucide-react";
 
 import { DataTable, type ColumnConfig } from "@/components/ui/dataTable";
-import { MobileDataTable } from "@/components/ui/mobileDataTable";
+import {
+  MobileDataTable,
+  type RowAction,
+} from "@/components/ui/mobileDataTable";
+import { useRouter } from "next/navigation";
 
 type TransactionStatus = "completed" | "processing" | "canceled" | "failed";
 type PaymentChannel = "Payment Link" | "Payment Page" | "API" | "POS";
@@ -135,7 +139,48 @@ const handleMobileRowClick = (_transaction: LatestTransaction) => {
   console.log("Mobile row clicked:", _transaction);
 };
 
+const getMobileRowActions = (transaction: LatestTransaction): RowAction[] => {
+  const actions: RowAction[] = [
+    {
+      label: "Show More Detail",
+      variant: "outline",
+      size: "lg",
+      onClick: () =>
+        console.log("Show more detail for transaction:", transaction.id),
+    },
+  ];
+
+  if (transaction.status === "completed") {
+    actions.push({
+      label: "Download Receipt",
+      variant: "primary",
+      size: "lg",
+      onClick: () =>
+        console.log("Download receipt for transaction:", transaction.id),
+    });
+  }
+
+  if (transaction.status === "failed" || transaction.status === "canceled") {
+    actions.push({
+      label: "Retry Payment",
+      variant: "alert",
+      size: "lg",
+      onClick: () =>
+        console.log("Retry payment for transaction:", transaction.id),
+    });
+  }
+
+  return actions;
+};
+
 export function LatestTransactionsCard(): JSX.Element {
+  const router = useRouter();
+
+  const handleNavigateToTransaction = () => {
+    if (router) {
+      router.push("/transactions");
+    }
+  };
   return (
     <section className="rounded-[12px] bg-gray-50  md:px-6 md:pt-6 p-3 dark:bg-gray-600">
       <div className="flex flex-wrap items-start mb-8 justify-between gap-4">
@@ -147,6 +192,7 @@ export function LatestTransactionsCard(): JSX.Element {
 
         <button
           type="button"
+          onClick={handleNavigateToTransaction}
           className="flex items-center gap-2 text-md font-semibold text-orange-200 font-exo2-medium transition hover:text-orange hover:cursor-pointer md:flex hidden"
         >
           See all Transactions
@@ -169,10 +215,14 @@ export function LatestTransactionsCard(): JSX.Element {
           columns={MOBILE_TRANSACTION_COLUMNS}
           data={LATEST_TRANSACTIONS}
           onRowClick={handleMobileRowClick}
+          detailColumns={LATEST_TRANSACTION_COLUMNS}
+          detailTitle="Transaction Details"
+          getRowActions={getMobileRowActions}
         />
       </div>
       <button
         type="button"
+        onClick={handleNavigateToTransaction}
         className="flex mt-4 gap-2 text-md font-semibold text-orange-200 font-exo2-medium transition hover:text-orange hover:cursor-pointer w-full justify-center items-center flex md:hidden"
       >
         See all Transactions

@@ -326,7 +326,7 @@ export function TransactionsValueCard(): JSX.Element {
         {/* Toggle Button */}
         <Switch
           size="lg"
-          variant="outline"
+          variant="filled"
           className={`${switchClassName}`}
           checked={view === "usd"}
           onCheckedChange={handleSwitchChange}

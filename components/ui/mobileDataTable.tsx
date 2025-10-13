@@ -1,9 +1,18 @@
 "use client";
 
-import { type ComponentProps, JSX, type ReactNode } from "react";
-import { ChevronRight } from "lucide-react";
+import { type ComponentProps, JSX, type ReactNode, useState } from "react";
+import { ChevronRight, X } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+} from "@/components/ui/drawer";
 import {
   Table,
   TableBody,
@@ -42,6 +51,20 @@ interface MobileDataTableProps {
   onRowClick?: (row: any) => void;
   rowMenuLabel?: string;
   cryptoIcons?: Record<string, (props: any) => JSX.Element>;
+  detailColumns?: ColumnConfig[];
+  detailTitle?: string;
+  getRowActions?: (row: any) => RowAction[];
+}
+
+export interface RowAction {
+  label: string;
+  onClick?: (row: any) => void;
+  variant?: ComponentProps<typeof Button>["variant"];
+  size?: ComponentProps<typeof Button>["size"];
+  icon?: ReactNode;
+  className?: string;
+  disabled?: boolean;
+  closeOnClick?: boolean;
 }
 
 // Default formatters
@@ -193,97 +216,216 @@ export function MobileDataTable({
   onRowClick,
   rowMenuLabel = "Open transaction actions",
   cryptoIcons = {},
+  detailColumns,
+  detailTitle = "Transaction Details",
+  getRowActions,
 }: MobileDataTableProps): JSX.Element {
   const mergedCryptoIcons = { ...DEFAULT_CRYPTO_ICONS, ...cryptoIcons };
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [selectedRow, setSelectedRow] = useState<any | null>(null);
+  const detailFields = detailColumns && detailColumns.length > 0 ? detailColumns : columns;
+  const isInteractive = true;
+
+  const closeDrawer = () => {
+    setIsDrawerOpen(false);
+    setSelectedRow(null);
+  };
+
+  const handleActionClick = (action: RowAction) => {
+    if (!selectedRow) return;
+    action.onClick?.(selectedRow);
+    if (action.closeOnClick) {
+      closeDrawer();
+    }
+  };
+
+  const actions: RowAction[] =
+    selectedRow && getRowActions ? getRowActions(selectedRow) ?? [] : [];
 
   return (
-    <div className="overflow-hidden rounded-lg">
-      <Table className="table-auto text-sm">
-        <TableHeader className="bg-gray-50 dark:bg-gray-600">
-          <TableRow className="border-none">
-            {columns.map(column => (
-              <TableHead
-                key={column.key}
-                className={`px-2 py-3 text-xs font-exo2-medium uppercase tracking-wide text-gray-600 dark:text-gray-300 !whitespace-normal leading-tight ${
-                  column.align === "right"
-                    ? "text-right"
-                    : column.align === "center"
-                    ? "text-center"
-                    : "text-left"
-                }`}
-                style={column.width ? { width: column.width } : {}}
-              >
-                {column.label}
-              </TableHead>
-            ))}
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {data.map((row, rowIndex) => {
-            const isInteractive = Boolean(onRowClick);
-            return (
-              <TableRow
-                key={row.id || rowIndex}
-                onClick={() => onRowClick?.(row)}
-                onKeyDown={event => {
-                  if (!isInteractive) return;
-                  if (event.key === "Enter" || event.key === " ") {
-                    event.preventDefault();
-                    onRowClick?.(row);
-                  }
-                }}
-                role={isInteractive ? "button" : undefined}
-                tabIndex={isInteractive ? 0 : undefined}
-                aria-label={isInteractive ? rowMenuLabel : undefined}
-                className={`border-t border-gray-100 transition-colors first:border-t-0 hover:bg-gray-50 dark:border-gray-500 dark:hover:bg-gray-600/50 ${
-                  isInteractive
-                    ? "cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-200/60 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-orange-200/40 dark:focus-visible:ring-offset-gray-700"
-                    : ""
-                }`}
-              >
-                {columns.map(column => {
-                  const value = getCellValue(row, column.key);
-                  const textAlignClass =
+    <Drawer
+      open={isDrawerOpen}
+      onOpenChange={open => {
+        setIsDrawerOpen(open);
+        if (!open) {
+          setSelectedRow(null);
+        }
+      }}
+    >
+      <div className="overflow-hidden rounded-lg">
+        <Table className="table-auto text-sm">
+          <TableHeader className="bg-gray-50 dark:bg-gray-600">
+            <TableRow className="border-none">
+              {columns.map(column => (
+                <TableHead
+                  key={column.key}
+                  className={`px-2 py-3 text-xs font-exo2-medium uppercase tracking-wide text-gray-600 dark:text-gray-300 !whitespace-normal leading-tight ${
                     column.align === "right"
                       ? "text-right"
                       : column.align === "center"
                       ? "text-center"
-                      : "text-left";
-                  const isStatusColumn = column.type === "status";
+                      : "text-left"
+                  }`}
+                  style={column.width ? { width: column.width } : {}}
+                >
+                  {column.label}
+                </TableHead>
+              ))}
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {data.map((row, rowIndex) => {
+              return (
+                <TableRow
+                  key={row.id || rowIndex}
+                  onClick={() => {
+                    onRowClick?.(row);
+                    setSelectedRow(row);
+                    setIsDrawerOpen(true);
+                  }}
+                  onKeyDown={event => {
+                    if (!isInteractive) return;
+                    if (event.key === "Enter" || event.key === " ") {
+                      event.preventDefault();
+                      onRowClick?.(row);
+                      setSelectedRow(row);
+                      setIsDrawerOpen(true);
+                    }
+                  }}
+                  role={isInteractive ? "button" : undefined}
+                  tabIndex={isInteractive ? 0 : undefined}
+                  aria-label={isInteractive ? rowMenuLabel : undefined}
+                  className={`border-t border-gray-100 transition-colors first:border-t-0 hover:bg-gray-50 dark:border-gray-500 dark:hover:bg-gray-600/50 ${
+                    isInteractive
+                      ? "cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-200/60 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-orange-200/40 dark:focus-visible:ring-offset-gray-700"
+                      : ""
+                  }`}
+                >
+                  {columns.map(column => {
+                    const value = getCellValue(row, column.key);
+                    const textAlignClass =
+                      column.align === "right"
+                        ? "text-right"
+                        : column.align === "center"
+                        ? "text-center"
+                        : "text-left";
+                    const isStatusColumn = column.type === "status";
 
-                  return (
-                    <TableCell
-                      key={`${row.id || rowIndex}-${column.key}`}
-                      className={`px-4 py-4 align-middle ${textAlignClass} ${
-                        column.type !== "crypto"
-                          ? "text-sm font-exo2-medium text-gray-900 dark:text-white"
-                          : ""
-                      } !whitespace-normal break-words`}
-                    >
-                      {isStatusColumn ? (
-                        <div className="flex items-center justify-between gap-3">
-                          {renderCellContent(
+                    return (
+                      <TableCell
+                        key={`${row.id || rowIndex}-${column.key}`}
+                        className={`px-4 py-4 align-middle ${textAlignClass} ${
+                          column.type !== "crypto"
+                            ? "text-sm font-exo2-medium text-gray-900 dark:text-white"
+                            : ""
+                        } !whitespace-normal break-words`}
+                      >
+                        {isStatusColumn ? (
+                          <div className="flex items-center justify-between gap-3">
+                            {renderCellContent(
+                              value,
+                              column,
+                              row,
+                              mergedCryptoIcons
+                            )}
+                            <ChevronRight
+                              aria-hidden
+                              className="h-4 w-4 text-gray-300 dark:text-gray-400"
+                            />
+                          </div>
+                        ) : (
+                          renderCellContent(
                             value,
                             column,
                             row,
                             mergedCryptoIcons
-                          )}
-                          <ChevronRight
-                            aria-hidden
-                            className="h-4 w-4 text-gray-300 dark:text-gray-400"
-                          />
-                        </div>
-                      ) : (
-                        renderCellContent(value, column, row, mergedCryptoIcons)
-                      )}
-                    </TableCell>
-                  );
-                })}
-              </TableRow>
-            );
-          })}
-        </TableBody>
-      </Table>
-    </div>
+                          )
+                        )}
+                      </TableCell>
+                    );
+                  })}
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
+      </div>
+      {selectedRow && (
+        <DrawerContent className="bg-white dark:bg-gray-700">
+          <DrawerHeader className="px-6 pt-5 pb-2 text-left">
+            <div className="flex items-start justify-between">
+              <DrawerTitle className="text-lg font-exo2-semibold text-gray-900 dark:text-gray-50">
+                {detailTitle}
+              </DrawerTitle>
+              <DrawerClose asChild>
+                <button
+                  type="button"
+                  className="text-gray-400 transition hover:text-gray-600 dark:text-gray-300 dark:hover:text-gray-100"
+                  aria-label="Close details"
+                >
+                  <X className="h-5 w-5" aria-hidden />
+                </button>
+              </DrawerClose>
+            </div>
+          </DrawerHeader>
+          <div className="px-6 pb-2">
+            <div className="flex flex-col gap-4 rounded-2xl border border-gray-100 bg-white px-4 py-5 shadow-sm dark:border-gray-500/50 dark:bg-gray-600">
+              {detailFields.map(detailColumn => {
+                const value = getCellValue(selectedRow, detailColumn.key);
+                const hasValue =
+                  value !== null && value !== undefined && value !== "";
+                const content = hasValue ? (
+                  renderCellContent(
+                    value,
+                    detailColumn,
+                    selectedRow,
+                    mergedCryptoIcons
+                  )
+                ) : (
+                  <span className="text-sm font-exo2-medium text-gray-400">
+                    —
+                  </span>
+                );
+
+                return (
+                  <div
+                    key={detailColumn.key}
+                    className="flex items-start justify-between gap-6"
+                  >
+                    <span className="text-sm font-exo2-medium text-gray-500 dark:text-gray-200">
+                      {detailColumn.label}
+                    </span>
+                    <div className="flex min-w-0 flex-1 justify-end text-right text-sm font-exo2-medium text-gray-900 dark:text-white">
+                      <div className="flex max-w-full justify-end text-right">
+                        {content}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+          {actions.length > 0 && (
+            <DrawerFooter className="gap-3 border-t border-gray-100 bg-gray-50 pb-6 pt-4 dark:border-gray-600 dark:bg-gray-600">
+              {actions.map((action, index) => (
+                <Button
+                  key={`${action.label}-${index}`}
+                  variant={action.variant ?? "outline"}
+                  size={action.size ?? "md"}
+                  className={`w-full justify-center ${action.className ?? ""}`}
+                  disabled={action.disabled}
+                  onClick={() => handleActionClick(action)}
+                >
+                  {action.icon && (
+                    <span className="mr-2 inline-flex">{action.icon}</span>
+                  )}
+                  {action.label}
+                </Button>
+              ))}
+            </DrawerFooter>
+          )}
+        </DrawerContent>
+      )}
+    </Drawer>
   );
 }
