@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
   Drawer,
+  DrawerClose,
   DrawerContent,
   DrawerHeader,
   DrawerTitle,
@@ -18,6 +19,7 @@ import Btc from "@/components/icons/crypto/Btc";
 import Eth from "@/components/icons/crypto/Eth";
 import Ltc from "@/components/icons/crypto/Ltc";
 import Generic from "@/components/icons/crypto/Generic";
+import { useRouter } from "next/navigation";
 
 type Transaction = {
   refId: string;
@@ -186,7 +188,7 @@ function TransactionsContent() {
   }, [currentPage, itemsPerPage]);
 
   const totalPages = Math.ceil(transactions.length / itemsPerPage);
-
+  const router = useRouter();
   const startIndex = (currentPage - 1) * itemsPerPage + 1;
   const endIndex = Math.min(currentPage * itemsPerPage, transactions.length);
 
@@ -296,7 +298,8 @@ function TransactionsContent() {
           <div className="text-sm text-muted-foreground">
             Showing {startIndex} to {endIndex} of {transactions.length} results
           </div>
-          <div>  <SmartPagination
+          <div>
+            <SmartPagination
             currentPage={currentPage}
             totalPages={totalPages}
             onPageChange={setCurrentPage}
@@ -307,47 +310,40 @@ function TransactionsContent() {
         </div>
         {selectedTransaction && (
           <DrawerContent>
-            <DrawerHeader>
+            <DrawerHeader className="flex justify-between items-center">
               <DrawerTitle>Transaction Details</DrawerTitle>
+              <DrawerClose />
             </DrawerHeader>
-            <div className="px-4 grid gap-4 py-4">
-              <div className="grid grid-cols-4 items-center gap-4">
-                <span className="text-right col-span-1">Ref ID</span>
-                <span className="col-span-3 font-semibold">
-                  {selectedTransaction.refId}
-                </span>
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <span className="text-right col-span-1">Payment</span>
-                <span className="col-span-3 font-semibold">
-                  {selectedTransaction.paymentAmount}
-                </span>
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <span className="text-right col-span-1">Crypto</span>
-                <span className="col-span-3 font-semibold">
-                  {selectedTransaction.cryptoAmount}
-                </span>
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <span className="text-right col-span-1">Type</span>
-                <span className="col-span-3 font-semibold">
-                  {selectedTransaction.type}
-                </span>
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <span className="text-right col-span-1">Status</span>
-                <div className="col-span-3">
-                  <Badge variant={statusVariant[selectedTransaction.status]}>
-                    {selectedTransaction.status}
-                  </Badge>
+
+            <div className="px-4 py-4 grid gap-4">
+              {[
+                { label: "Ref ID", value: selectedTransaction.refId },
+                { label: "Payment Amount", value: selectedTransaction.paymentAmount },
+                { label: "Crypto Amount", value: selectedTransaction.cryptoAmount },
+                { label: "Type", value: selectedTransaction.type },
+                { label: "Date of Create", value: selectedTransaction.date },
+              ].map((item) => (
+                <div key={item.label} className="grid grid-cols-2 items-center gap-4">
+                  <span className="text-left font-medium text-gray-500 dark:text-gray-400">{item.label} :</span>
+                  <span className="text-left font-semibold text-gray-800 dark:text-gray-100">{item.value}</span>
                 </div>
+              ))}
+
+              <div className="grid grid-cols-2 items-center gap-4">
+                <span className="text-left font-medium text-gray-500 dark:text-gray-400">Status :</span>
+                <Badge variant={statusVariant[selectedTransaction.status]}>
+                  {selectedTransaction.status}
+                </Badge>
               </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <span className="text-right col-span-1">Date</span>
-                <span className="col-span-3 font-semibold">
-                  {selectedTransaction.date}
-                </span>
+
+              <div className="mt-6">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="flex items-center gap-1 text-foreground border-foreground w-full"
+                  onClick={() => router.push(`/transactions/${selectedTransaction.refId}`)}
+                >Show More Detail</Button>
+
               </div>
             </div>
           </DrawerContent>
