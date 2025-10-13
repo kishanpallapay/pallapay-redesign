@@ -9,10 +9,10 @@ type HeatmapLevel = 0 | 1 | 2 | 3;
 type HeatmapConfig = Record<string, HeatmapLevel>;
 
 const INTENSITY_CLASSES: Record<HeatmapLevel, string> = {
-  0: "bg-orange-50",
-  1: "bg-orange-100",
-  2: "bg-orange-200",
-  3: "bg-orange-300",
+  0: "bg-orange-50 dark:bg-orange-400",
+  1: "bg-orange-100 dark:bg-orange-300",
+  2: "bg-orange-200 dark:bg-orange-200",
+  3: "bg-orange-300 dark:bg-orange-100",
 };
 
 const generateHeatmap = (
