@@ -136,10 +136,10 @@ function ResponsiveLayout({
         />
 
         <main
-          className="fixed left-6 right-6 bottom-6 top-[var(--main-offset-mobile)] overflow-y-auto no-scrollbar lg:left-[calc(16rem+2.25rem)] lg:top-[var(--main-offset-desktop)]"
+          className="fixed left-6 right-6 bottom-6 top-[var(--main-offset-mobile)] overflow-y-auto no-scrollbar lg:left-[calc(16rem+2.25rem)] lg:top-[var(--main-offset-desktop)] rounded-[12px]"
           style={mainOffsets}
         >
-          <div className="h-full w-full no-scrollbar">{children}</div>
+          <div className="h-full w-full no-scrollbar ">{children}</div>
         </main>
       </div>
     </div>
