@@ -16,6 +16,7 @@ import {
   NameType,
   ValueType,
 } from "recharts/types/component/DefaultTooltipContent";
+import { Switch } from "../../ui/switch";
 
 type CurrencyView = "aed" | "usd";
 
@@ -280,7 +281,7 @@ export function TransactionsValueCard(): JSX.Element {
   );
 
   const handleSwitchChange = (checked: boolean): void => {
-    setView(checked ? "aed" : "usd");
+    setView(checked ? "usd" : "aed");
   };
 
   const axisTickFormatter = (value: number): string => {
@@ -291,22 +292,19 @@ export function TransactionsValueCard(): JSX.Element {
   };
 
   return (
-    <section className="w-full rounded-2xl bg-gray-50 dark:bg-gray-600 p-4 sm:p-6 transition-colors duration-200">
+    <section className="flex h-full w-full flex-col rounded-2xl bg-gray-50 dark:bg-gray-600 p-4 sm:p-6 transition-colors duration-200">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-4 mb-6">
         <div className="flex-1">
-          <p className="font-exo2-medium text-base sm:text-lg text-gray dark:text-gray-50 transition-colors duration-200">
+          <p className="font-exo2-medium text-base sm:text-lg text-black dark:text-white transition-colors duration-200">
             Transactions Value
-          </p>
-          <p className="text-xs sm:text-sm text-gray-300 dark:text-gray-400 font-exo2-medium mt-1 transition-colors duration-200">
-            Channel performance overview
           </p>
         </div>
 
         {/* This Week Button */}
         <button
           type="button"
-          className="flex items-center justify-center gap-2 rounded-full bg-white dark:bg-gray-700 px-3 sm:px-4 py-2 text-xs sm:text-sm font-exo2-semibold text-gray-600 dark:text-gray-200 shadow-sm ring-1 ring-black/5 dark:ring-white/10 transition-all duration-200 hover:shadow-md dark:hover:shadow-lg hover:ring-gray-200 dark:hover:ring-gray-500 flex-shrink-0"
+          className="flex items-center justify-center gap-2  text-xs sm:text-sm font-exo2-semibold text-black dark:text-white transition-all duration-200  flex-shrink-0"
         >
           This Week
           <ChevronDown className="h-4 w-4" aria-hidden />
@@ -314,38 +312,31 @@ export function TransactionsValueCard(): JSX.Element {
       </div>
 
       {/* Total Balance Section */}
-      <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-6 sm:mb-8">
+      <div className="flex flex-col sm:flex-row sm:items-center  sm:justify-start gap-6 mb-6 sm:mb-8">
         <div className="flex items-end gap-2 sm:gap-3 flex-wrap">
-          <span className="text-3xl sm:text-4xl lg:text-5xl font-exo2-semibold text-gray-900 dark:text-white transition-colors duration-200">
+          <span className="text-3xl font-exo2-semibold text-black dark:text-white transition-colors duration-200">
             {formattedTotal}
           </span>
-          <span className="text-sm sm:text-lg font-exo2-medium text-gray-500 dark:text-gray-300 transition-colors duration-200">
+          <span className="text-lg font-exo2-medium text-black dark:text-white transition-colors duration-200">
             {currencyMeta.label}
           </span>
         </div>
 
         {/* Toggle Button */}
-        <button
-          onClick={() => setView(view === "aed" ? "usd" : "aed")}
-          className="w-16 h-8 sm:w-20 sm:h-10 rounded-full bg-gray-300 dark:bg-gray-500 flex items-center transition-all duration-200 flex-shrink-0 relative"
-          aria-label="Toggle currency"
-        >
-          <div
-            className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white dark:bg-gray-700 shadow-md transition-all duration-200 flex items-center justify-center ${
-              view === "aed"
-                ? "translate-x-1"
-                : "translate-x-8 sm:translate-x-10"
-            }`}
-          >
-            <span className="text-xs font-exo2-semibold text-gray-700 dark:text-white">
-              {view === "aed" ? "AED" : "USD"}
-            </span>
-          </div>
-        </button>
+        <Switch
+          size="lg"
+          variant="filled"
+          checked={view === "usd"}
+          onCheckedChange={handleSwitchChange}
+          showText
+          onText="USD"
+          offText="AED"
+          aria-label="Toggle currency between AED and USD"
+        />
       </div>
 
       {/* Chart */}
-      <div className="mb-6 h-56 sm:h-64 lg:h-72 w-full -mx-4 sm:-mx-6 px-4 sm:px-6">
+      <div className="mb-6 h-56 sm:h-64 lg:h-72 w-full -mx-4 sm:-mx-6 px-4 sm:px-6 flex-1">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
             data={data}
@@ -355,23 +346,22 @@ export function TransactionsValueCard(): JSX.Element {
           >
             <CartesianGrid
               strokeDasharray="4 4"
-              vertical={false}
               stroke="#E5E7EB"
-              className="dark:stroke-gray-700"
+              className="dark:stroke-gray-400 stroke-gray-200"
             />
             <XAxis
               dataKey="day"
               tickLine={false}
               axisLine={false}
-              tick={{ fontSize: 12, fill: "#6B7280" }}
-              className="dark:fill-gray-400"
+              tick={{ fontSize: 11, fill: "#6B7280" }}
+              className="dark:fill-gray-50 fill-gray-600"
             />
             <YAxis
               tickLine={false}
               axisLine={false}
               tickFormatter={axisTickFormatter}
-              tick={{ fontSize: 12, fill: "#6B7280" }}
-              className="dark:fill-gray-400"
+              tick={{ fontSize: 11, fill: "#6B7280" }}
+              className="dark:fill-gray-50 fill-gray-600"
             />
             <Tooltip
               cursor={{ fill: "rgba(249, 115, 22, 0.08)" }}
@@ -404,20 +394,18 @@ export function TransactionsValueCard(): JSX.Element {
       </div>
 
       {/* Legend */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+      <div className="mt-auto flex flex-wrap gap-x-6 gap-y-3 text-xs sm:text-sm pl-9">
         {ALL_CATEGORIES.map(category => (
           <div
             key={category.key}
-            className="flex items-center gap-2 sm:gap-3 rounded-lg sm:rounded-2xl bg-white dark:bg-gray-700 px-3 sm:px-4 py-2 sm:py-3 shadow-sm ring-1 ring-black/5 dark:ring-white/5 transition-all duration-200 hover:shadow-md dark:hover:shadow-lg"
+            className="flex items-center gap-2 font-exo2-semibold text-gray-900 dark:text-white transition-colors duration-200"
           >
             <span
               className="h-3 w-3 rounded-full flex-shrink-0"
               style={{ backgroundColor: category.color }}
               aria-hidden
             />
-            <span className="text-xs sm:text-sm font-exo2-semibold text-gray-900 dark:text-white transition-colors duration-200 truncate">
-              {category.label}
-            </span>
+            <span className="truncate">{category.label}</span>
           </div>
         ))}
       </div>

@@ -10,10 +10,10 @@ function HomePage() {
   return (
     <div className="space-y-6">
       <div className="grid gap-6 lg:grid-cols-12">
-        <div className="lg:col-span-5">
+        <div className="lg:col-span-5 h-full">
           <EstimatedBalanceCard />
         </div>
-        <div className="lg:col-span-7">
+        <div className="lg:col-span-7 h-full">
           <TransactionsValueCard />
         </div>
       </div>

@@ -3,7 +3,14 @@
 import { JSX, useMemo, useState } from "react";
 import { Eye } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
+import {
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
+  PieLabelRenderProps,
+} from "recharts";
+import { Switch } from "../../ui/switch";
 
 type BalanceSlice = {
   asset: string;
@@ -85,6 +92,43 @@ function getDominantSlice(data: BalanceSlice[]): BalanceSlice {
   );
 }
 
+const RADIAN = Math.PI / 180;
+
+// Use PieLabelRenderProps from recharts for correct typing
+function renderPieLabel(props: PieLabelRenderProps): JSX.Element | null {
+  const {
+    cx = 0,
+    cy = 0,
+    innerRadius = 0,
+    outerRadius = 0,
+    midAngle = 0,
+    percent = 0,
+  } = props;
+
+  const labelPercent = Math.round((Number(percent) || 0) * 100);
+  if (labelPercent <= 0) {
+    return null;
+  }
+
+  const radius =
+    Number(innerRadius) + (Number(outerRadius) - Number(innerRadius)) * 0.4;
+  const x = Number(cx) + radius * Math.cos(-Number(midAngle) * RADIAN);
+  const y = Number(cy) + radius * Math.sin(-Number(midAngle) * RADIAN);
+
+  return (
+    <text
+      x={x}
+      y={y}
+      fill="currentColor"
+      textAnchor="middle"
+      dominantBaseline="central"
+      className="text-xs sm:text-sm font-exo2-semibold text-gray-900 dark:text-white transition-colors duration-200"
+    >
+      {labelPercent}%
+    </text>
+  );
+}
+
 export function EstimatedBalanceCard(): JSX.Element {
   const [view, setView] = useState<"fiat" | "crypto">("fiat");
 
@@ -112,10 +156,10 @@ export function EstimatedBalanceCard(): JSX.Element {
   }, [currency, view]);
 
   return (
-    <section className="w-full rounded-2xl bg-gray-50 dark:bg-gray-600 p-4 sm:p-6 transition-colors duration-200">
+    <section className="flex h-full w-full flex-col rounded-2xl bg-gray-50 dark:bg-gray-600 p-4 sm:p-6 transition-colors duration-200">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-4 mb-6 sm:mb-8">
-        <div className="flex-1">
+      <div className="flex flex-wrap items-start justify-between gap-3 sm:gap-4 mb-6 sm:mb-8">
+        <div className="flex-1 basis-full sm:basis-auto">
           <p className="font-exo2-medium text-base sm:text-lg text-gray dark:text-gray-50 transition-colors duration-200">
             {headline}
           </p>
@@ -125,25 +169,28 @@ export function EstimatedBalanceCard(): JSX.Element {
         </div>
 
         {/* Toggle Button */}
-        <button
-          onClick={() => setView(view === "fiat" ? "crypto" : "fiat")}
-          className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-orange dark:bg-orange flex items-center justify-center flex-shrink-0 transition-all duration-200 hover:scale-105 active:scale-95 shadow-md dark:shadow-lg"
-          aria-label="Toggle balance view"
-        >
-          <span className="text-xl sm:text-2xl font-exo2-semibold text-gray-600 dark:text-gray-600">
-            {view === "fiat" ? "$" : "₿"}
-          </span>
-        </button>
+        <div className="self-start flex-shrink-0 sm:ml-auto">
+          <Switch
+            variant="filled"
+            size="lg"
+            checked={view === "fiat"}
+            onCheckedChange={checked => setView(checked ? "fiat" : "crypto")}
+            showText
+            onText={BALANCE_VIEWS.fiat.currency}
+            offText={BALANCE_VIEWS.crypto.currency}
+            aria-label="Toggle between fiat and crypto balances"
+          />
+        </div>
       </div>
 
       {/* Main Content */}
-      <div className="flex flex-col gap-6 md:gap-8">
+      <div className="flex flex-1 flex-col gap-6 md:gap-8">
         {/* Top Section: Balance & Chart */}
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+        <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-6">
           {/* Left: Balance Info */}
           <div className="flex flex-col items-start gap-3 flex-1 min-w-0">
             <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
-              <span className="text-3xl sm:text-4xl lg:text-5xl font-exo2-semibold text-gray-900 dark:text-white break-all transition-colors duration-200">
+              <span className="text-3xl sm:text-4xl lg:text-5xl font-exo2-semibold leading-tight text-gray-900 dark:text-white break-all transition-colors duration-200">
                 {formattedTotal}
               </span>
               <Eye
@@ -158,23 +205,21 @@ export function EstimatedBalanceCard(): JSX.Element {
           </div>
 
           {/* Right: Pie Chart */}
-          <div className="flex justify-center lg:justify-end w-full lg:w-auto">
+          <div className="flex justify-center xl:justify-end w-full xl:w-auto">
             <div className="relative flex h-48 w-48 sm:h-56 sm:w-56 items-center justify-center flex-shrink-0">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
                     data={data}
                     dataKey="value"
-                    innerRadius="55%"
+                    innerRadius="50%"
                     outerRadius="85%"
                     strokeWidth={0}
                     startAngle={90}
                     endAngle={-270}
                     paddingAngle={3}
                     labelLine={false}
-                    label={({ percent }) =>
-                      `${Math.round((Number(percent) || 0) * 100)}%`
-                    }
+                    label={renderPieLabel}
                   >
                     {data.map(entry => (
                       <Cell key={entry.asset} fill={entry.color} />
@@ -200,34 +245,21 @@ export function EstimatedBalanceCard(): JSX.Element {
         </div>
 
         {/* Legend */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+        <div className="mt-auto grid grid-cols-2 gap-y-4 gap-x-6 justify-items-center text-gray-900 dark:text-white transition-colors duration-200 text-xs sm:text-sm font-exo2-medium lg:flex lg:flex-wrap lg:justify-between lg:gap-4 lg:justify-items-start">
           {data.map(slice => (
             <div
               key={slice.asset}
-              className={cn(
-                "flex items-center justify-between rounded-xl sm:rounded-2xl px-3 sm:px-4 py-2 sm:py-3 transition-all duration-200",
-                "bg-white dark:bg-gray-700",
-                "border border-gray-100 dark:border-gray-600",
-                "shadow-sm dark:shadow-md",
-                "hover:shadow-md dark:hover:shadow-lg",
-                "hover:border-gray-200 dark:hover:border-gray-500"
-              )}
+              className="flex flex-col items-center gap-1 text-center lg:flex-row lg:items-center lg:gap-3 lg:text-left"
             >
-              <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+              <div className="flex items-center gap-2">
                 <span
-                  className={cn(
-                    "h-3 w-3 rounded-full transition-all duration-200 flex-shrink-0",
-                    slice.asset === dominantSlice.asset
-                      ? "ring-2 ring-offset-2 ring-orange dark:ring-orange"
-                      : ""
-                  )}
+                  className="h-3 w-3 rounded-full flex-shrink-0"
                   style={{ backgroundColor: slice.color }}
+                  aria-hidden
                 />
-                <span className="text-xs sm:text-sm font-exo2-semibold text-gray-900 dark:text-white truncate transition-colors duration-200">
-                  {slice.label}
-                </span>
+                <span className="font-exo2-semibold">{slice.label}</span>
               </div>
-              <span className="text-xs sm:text-sm font-exo2-medium text-gray-600 dark:text-gray-300 flex-shrink-0 ml-2 transition-colors duration-200">
+              <span className="lg:ml-auto">
                 {view === "fiat" && legendCurrencyFormatter
                   ? legendCurrencyFormatter.format(slice.value)
                   : `${slice.value.toFixed(2)} ${slice.unit ?? slice.asset}`}
