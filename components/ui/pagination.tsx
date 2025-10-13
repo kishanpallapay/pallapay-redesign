@@ -95,7 +95,6 @@ function PaginationLink({
           size,
         }),
         {
-          "bg-orange-200 hover:bg-orange-400": isActive,
           "pointer-events-none opacity-50 cursor-not-allowed": disabled,
         },
         className
@@ -274,7 +273,7 @@ function SmartPagination({
   }
 
   return (
-    <div className="flex items-center justify-center gap-3 w-full">
+    <div className="flex items-center justify-end gap-3 w-full">
       <Pagination className={className}>
         <PaginationContent>
           {/* Previous Button */}
