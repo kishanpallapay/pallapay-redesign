@@ -297,7 +297,7 @@ export function TransactionsValueCard(): JSX.Element {
       : "border-gray-200 bg-gray-200/60 text-gray-600 dark:border-gray-400 dark:bg-gray-500/40";
 
   return (
-    <section className="flex h-full w-full flex-col rounded-[32px] bg-[#F9F9F7] p-5 sm:p-6 shadow-sm transition-colors duration-200 dark:bg-gray-600">
+    <section className="flex h-full w-full flex-col rounded-[12px] bg-gray-50 p-5 sm:p-6 transition-colors duration-200 dark:bg-gray-600">
       {/* Header */}
       <div className="mb-6 flex items-start justify-between gap-3 sm:mb-8">
         <p className="font-exo2-semibold text-lg text-black sm:text-xl dark:text-white transition-colors duration-200">
