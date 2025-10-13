@@ -9,7 +9,7 @@
   {
     "id": "transactions",
     "label": "Transactions",
-    "href": "/dashboard/transactions",
+    "href": "/transactions",
     "icon": "transactions",
     "roles": ["merchant", "admin"]
   },
