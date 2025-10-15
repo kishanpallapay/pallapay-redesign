@@ -9,11 +9,13 @@ import {
   useMemo,
   useState,
 } from "react";
-import { X } from "lucide-react";
-
 import { cn } from "@/lib/utils";
 import { getNavItemsForRole } from "@/lib/navigation/get-nav-items";
-import { HeaderUser, TopHeader } from "@/components/layouts/top-header";
+import {
+  HeaderUser,
+  TopHeader,
+  type NotificationItem,
+} from "@/components/layouts/top-header";
 import { SidebarNav } from "./sidebar-nav";
 
 type NavItem = {
@@ -32,6 +34,8 @@ type LayoutOptions = {
   searchPlaceholder?: string;
   user?: HeaderUser;
   hasNotificationDot?: boolean;
+  notifications?: NotificationItem[];
+  onViewAllNotifications?: () => void;
 };
 
 type ResponsiveLayoutProps = LayoutOptions & {
@@ -54,6 +58,8 @@ function ResponsiveLayout({
   searchPlaceholder = "Search",
   user,
   hasNotificationDot = true,
+  notifications,
+  onViewAllNotifications,
 }: ResponsiveLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [headerHeight, setHeaderHeight] = useState<number | null>(null);
@@ -133,6 +139,8 @@ function ResponsiveLayout({
           hasNotificationDot={hasNotificationDot}
           user={userProfile}
           onHeightChange={handleHeaderHeight}
+          notifications={notifications}
+          onViewAllNotifications={onViewAllNotifications}
         />
 
         <main
@@ -161,6 +169,8 @@ export function withResponsiveLayout<P extends Record<string, unknown>>(
         searchPlaceholder={options?.searchPlaceholder}
         user={options?.user}
         hasNotificationDot={options?.hasNotificationDot}
+        notifications={options?.notifications}
+        onViewAllNotifications={options?.onViewAllNotifications}
       >
         <Component {...props} />
       </ResponsiveLayout>
