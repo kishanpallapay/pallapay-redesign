@@ -79,7 +79,7 @@
   {
     "id": "account",
     "label": "Account",
-    "href": "/dashboard/account",
+    "href": "/account",
     "icon": "account",
     "roles": ["merchant", "admin", "analyst", "developer"]
   }

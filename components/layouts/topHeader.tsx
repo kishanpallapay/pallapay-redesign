@@ -284,7 +284,7 @@ export function TopHeader({
                         setDesktopNotificationsOpen(false);
                         onViewAllNotifications?.();
                       }}
-                      className="w-full justify-center rounded-[8px] border border-gray h-11 text-sm font-exo2-medium text-gray hover:border-gray-300 hover:bg-gray-50 hover:text-gray-900 dark:border-gray-700 dark:text-gray-100 dark:hover:bg-gray-700"
+                      className="w-full justify-center rounded-[8px] border border-gray h-11 text-sm font-exo2-medium text-gray   dark:border-white dark:text-white "
                     >
                       See All Messages
                       <ArrowRight className="h-5 w-5" aria-hidden="true" />
@@ -348,7 +348,7 @@ export function TopHeader({
         open={mobileNotificationsOpen}
         onOpenChange={next => setMobileNotificationsOpen(next)}
       >
-        <DrawerContent className="md:hidden border-none bg-white pb-6 dark:bg-black px-7">
+        <DrawerContent className="md:hidden border-none bg-white pb-6 dark:bg-black px-7 !rounded-t-3xl">
           <DrawerHeader className="flex-row items-center justify-between border-b border-gray-100 p-0 pt-4 pb-4 text-left dark:border-gray-700 ">
             <DrawerTitle className="text-lg font-exo2-semibold text-gray-900 dark:text-gray-50">
               Notifications
@@ -362,20 +362,20 @@ export function TopHeader({
           </DrawerHeader>
           <NotificationList
             notifications={notifications}
-            className="max-h-[60vh] overflow-y-auto px-5 py-5"
+            className="max-h-[60vh] overflow-y-auto py-5"
           />
-          <div className="px-5 pt-1">
+          <div className="pt-2">
             <Button
               type="button"
-              variant="ghost"
+              variant="outline"
               onClick={() => {
-                setMobileNotificationsOpen(false);
+                setDesktopNotificationsOpen(false);
                 onViewAllNotifications?.();
               }}
-              className="w-full justify-between rounded-xl border border-gray-200 px-4 py-3 text-sm font-exo2-semibold text-gray-900 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-900 dark:border-gray-700 dark:text-gray-100 dark:hover:bg-gray-700"
+              className="w-full justify-center rounded-[8px] border border-gray h-11 text-sm font-exo2-medium text-gray   dark:border-white dark:text-white "
             >
               See All Messages
-              <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              <ArrowRight className="h-5 w-5" aria-hidden="true" />
             </Button>
           </div>
         </DrawerContent>
