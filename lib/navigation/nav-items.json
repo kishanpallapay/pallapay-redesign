@@ -16,7 +16,7 @@
   {
     "id": "balances",
     "label": "Balances",
-    "href": "/dashboard/balances",
+    "href": "/balance",
     "icon": "balances",
     "roles": ["merchant", "admin", "analyst"]
   },
