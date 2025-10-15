@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Login } from "@/views/auth/login/login";
 import { Register } from "@/views/auth/register/register";
 import { ForgotPassword } from "@/views/auth/forgot/forgot-password";
-import { AuthSwitch } from "@/views/auth/components/AuthSwitch";
+import { AuthSwitch } from "@/components/pages/auth/AuthSwitch";
 import Image from "next/image";
 type AuthView = "login" | "register" | "forgotPassword";
 

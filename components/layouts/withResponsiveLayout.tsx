@@ -15,8 +15,8 @@ import {
   HeaderUser,
   TopHeader,
   type NotificationItem,
-} from "@/components/layouts/top-header";
-import { SidebarNav } from "./sidebar-nav";
+} from "@/components/layouts/topHeader";
+import { SidebarNav } from "./sidebarNav";
 
 type NavItem = {
   label: string;

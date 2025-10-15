@@ -6,7 +6,7 @@ import { ReactNode } from "react";
 import { usePathname } from "next/navigation";
 
 import { cn } from "@/lib/utils";
-import type { NavItem } from "./with-responsive-layout";
+import type { NavItem } from "./withResponsiveLayout";
 
 type SidebarNavProps = {
   items: NavItem[];

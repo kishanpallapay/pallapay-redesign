@@ -15,7 +15,7 @@ import {
   Wallet,
 } from "lucide-react";
 
-import type { NavItem } from "@/components/layouts/with-responsive-layout";
+import type { NavItem } from "@/components/layouts/withResponsiveLayout";
 import navConfig from "./nav-items.json";
 
 type NavIconMapKey =
@@ -68,7 +68,9 @@ export function getNavItemsForRole(role?: string): NavItem[] {
     .filter(item => {
       if (!item.roles?.length) return true;
       if (!normalizedRole) return false;
-      return item.roles.some(candidate => candidate.toLowerCase() === normalizedRole);
+      return item.roles.some(
+        candidate => candidate.toLowerCase() === normalizedRole
+      );
     })
     .map<NavItem>(item => ({
       label: item.label,
