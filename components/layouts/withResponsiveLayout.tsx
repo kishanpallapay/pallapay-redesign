@@ -36,6 +36,9 @@ type LayoutOptions = {
   hasNotificationDot?: boolean;
   notifications?: NotificationItem[];
   onViewAllNotifications?: () => void;
+  onLogout?: () => void;
+  onManageSettings?: () => void;
+  onUpgradeVerification?: () => void;
 };
 
 type ResponsiveLayoutProps = LayoutOptions & {
@@ -45,6 +48,10 @@ type ResponsiveLayoutProps = LayoutOptions & {
 const DEFAULT_USER: HeaderUser = {
   name: "John Doe",
   email: "johndoe@gmail.com",
+  verification: {
+    level: "Standard",
+    accountStatus: "Individual",
+  },
 };
 const DEFAULT_HEADER_HEIGHT = 112;
 
@@ -60,6 +67,9 @@ function ResponsiveLayout({
   hasNotificationDot = true,
   notifications,
   onViewAllNotifications,
+  onLogout,
+  onManageSettings,
+  onUpgradeVerification,
 }: ResponsiveLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [headerHeight, setHeaderHeight] = useState<number | null>(null);
@@ -141,6 +151,9 @@ function ResponsiveLayout({
           onHeightChange={handleHeaderHeight}
           notifications={notifications}
           onViewAllNotifications={onViewAllNotifications}
+          onLogout={onLogout}
+          onManageSettings={onManageSettings}
+          onUpgradeVerification={onUpgradeVerification}
         />
 
         <main
@@ -171,6 +184,9 @@ export function withResponsiveLayout<P extends Record<string, unknown>>(
         hasNotificationDot={options?.hasNotificationDot}
         notifications={options?.notifications}
         onViewAllNotifications={options?.onViewAllNotifications}
+        onLogout={options?.onLogout}
+        onManageSettings={options?.onManageSettings}
+        onUpgradeVerification={options?.onUpgradeVerification}
       >
         <Component {...props} />
       </ResponsiveLayout>

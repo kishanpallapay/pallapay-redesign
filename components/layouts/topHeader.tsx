@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { ArrowRight, Bell, Headphones, Menu, Search, X } from "lucide-react";
 import {
   ComponentPropsWithoutRef,
@@ -28,12 +27,8 @@ import {
   NotificationList,
   type NotificationItem,
 } from "../pages/notification/notificationList";
-
-export type HeaderUser = {
-  name: string;
-  email: string;
-  avatarUrl?: string;
-};
+import { ProfileDropdown } from "./profileDropdown";
+import type { HeaderUser } from "./headerUser";
 
 type TopHeaderProps = {
   hasNav: boolean;
@@ -47,15 +42,10 @@ type TopHeaderProps = {
   onHeightChange?: (height: number) => void;
   notifications?: NotificationItem[];
   onViewAllNotifications?: () => void;
+  onLogout?: () => void;
+  onManageSettings?: () => void;
+  onUpgradeVerification?: () => void;
 } & ComponentPropsWithoutRef<"header">;
-
-const getInitials = (value: string) =>
-  value
-    .split(" ")
-    .filter(Boolean)
-    .map(part => part.charAt(0)?.toUpperCase() ?? "")
-    .slice(0, 2)
-    .join("") || "JD";
 
 const DEFAULT_NOTIFICATIONS: NotificationItem[] = [
   {
@@ -109,11 +99,13 @@ export function TopHeader({
   onHeightChange,
   notifications: notificationsProp,
   onViewAllNotifications,
+  onLogout,
+  onManageSettings,
+  onUpgradeVerification,
   ...rest
 }: TopHeaderProps) {
   const headerRef = useRef<HTMLElement | null>(null);
   const lastReportedHeight = useRef<number>(0);
-  const userInitials = getInitials(user.name);
   const [desktopNotificationsOpen, setDesktopNotificationsOpen] =
     useState(false);
   const [mobileNotificationsOpen, setMobileNotificationsOpen] = useState(false);
@@ -314,31 +306,13 @@ export function TopHeader({
               >
                 <Headphones className="h-5 w-5" />
               </Button>
-              <div className="flex items-center gap-2 md:gap-3 rounded-full">
-                {user.avatarUrl ? (
-                  <div className="relative w-10 h-10 md:h-14 md:w-14 overflow-hidden rounded-full bg-gray-200">
-                    <Image
-                      src={user.avatarUrl}
-                      alt={`${user.name}'s avatar`}
-                      fill
-                      sizes="56px"
-                      className="object-cover"
-                    />
-                  </div>
-                ) : (
-                  <div className="flex  w-10 h-10 md:h-14 md:w-14 items-center justify-center rounded-full bg-gray-200 text-base font-semibold text-gray-600 dark:bg-gray-700 dark:text-gray-200">
-                    {userInitials}
-                  </div>
-                )}
-                <div className="hidden min-w-[140px] text-left leading-tight sm:block">
-                  <p className="text-base font-exo2-semibold text-black dark:text-white">
-                    {user.name}
-                  </p>
-                  <p className="text-sm font-exo2-medium text-black dark:text-white opacity-60">
-                    {user.email}
-                  </p>
-                </div>
-              </div>
+              <ProfileDropdown
+                user={user}
+                verification={user.verification}
+                onLogout={onLogout}
+                onManageSettings={onManageSettings}
+                onUpgradeVerification={onUpgradeVerification}
+              />
             </div>
           </div>
         </div>
@@ -384,3 +358,4 @@ export function TopHeader({
   );
 }
 export type { NotificationItem } from "../pages/notification/notificationList";
+export type { HeaderUser } from "./headerUser";
