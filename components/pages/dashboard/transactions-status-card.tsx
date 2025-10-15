@@ -9,18 +9,22 @@ type HeatmapLevel = 0 | 1 | 2 | 3;
 type HeatmapConfig = Record<string, HeatmapLevel>;
 
 const INTENSITY_CLASSES: Record<HeatmapLevel, string> = {
-  0: "bg-orange-50",
-  1: "bg-orange-100",
-  2: "bg-orange-200",
-  3: "bg-orange-300",
+  0: "bg-orange-50 dark:bg-orange-400",
+  1: "bg-orange-100 dark:bg-orange-300",
+  2: "bg-orange-200 dark:bg-orange-200",
+  3: "bg-orange-300 dark:bg-orange-100",
 };
 
-const generateHeatmap = (entries: Array<[number, HeatmapLevel]>): HeatmapConfig => {
+const generateHeatmap = (
+  entries: Array<[number, HeatmapLevel]>
+): HeatmapConfig => {
   const month = 0; // January (0-indexed)
   const year = 2024;
 
   return entries.reduce<HeatmapConfig>((map, [day, level]) => {
-    const isoString = new Date(Date.UTC(year, month, day)).toISOString().split("T")[0];
+    const isoString = new Date(Date.UTC(year, month, day))
+      .toISOString()
+      .split("T")[0];
     map[isoString] = level;
     return map;
   }, {});
@@ -73,14 +77,11 @@ export function TransactionsStatusCard(): JSX.Element {
   );
 
   return (
-    <section className="rounded-[12px] bg-gray-50 p-6 dark:bg-gray-600">
+    <section className="rounded-[12px] bg-gray-50 p-6 dark:bg-gray-600 h-full">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <p className="font-exo2-medium text-lg text-gray dark:text-gray-50">
             Total Transactions Status
-          </p>
-          <p className="text-sm font-exo2-medium text-gray-300">
-            Track busy payment days
           </p>
         </div>
       </div>
@@ -95,19 +96,20 @@ export function TransactionsStatusCard(): JSX.Element {
           toMonth={new Date(2024, 0)}
           showOutsideDays={false}
           intensityMap={JANUARY_HEATMAP}
-          className="mx-auto rounded-xl bg-white p-3 shadow-sm ring-1 ring-black/5 dark:bg-gray-800 dark:ring-white/5"
+          className="mx-auto rounded-xl p-3 "
         />
 
-        <div className="flex items-center justify-between text-xs text-gray-400">
+        <div className="flex items-center justify-center gap-2 text-xs text-gray-400">
+          <span className="font-medium dark:text-white text-black">LOW</span>
           {LEGEND_STOPS.map(({ label, level }, index) => (
             <div key={index} className="flex items-center gap-2">
               <span
-                className={`block h-3 w-6 rounded-full ${INTENSITY_CLASSES[level]}`}
+                className={`block h-3 w-3 rounded-full ${INTENSITY_CLASSES[level]}`}
                 aria-hidden
               />
-              {label && <span className="font-medium">{label}</span>}
             </div>
           ))}
+          <span className="font-medium dark:text-white text-black">HIGH</span>
         </div>
       </div>
     </section>

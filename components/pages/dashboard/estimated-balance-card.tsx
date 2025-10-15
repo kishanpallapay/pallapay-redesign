@@ -158,7 +158,7 @@ export function EstimatedBalanceCard(): JSX.Element {
   return (
     <section className="flex h-full w-full flex-col rounded-2xl bg-gray-50 dark:bg-gray-600 p-4 sm:p-6 transition-colors duration-200">
       {/* Header */}
-      <div className="flex flex-wrap items-start justify-between gap-3 sm:gap-4 mb-6 sm:mb-8">
+      <div className="flex items-start justify-between gap-3 sm:gap-4 mb-6 sm:mb-8">
         <div className="flex-1 basis-full sm:basis-auto">
           <p className="font-exo2-medium text-base sm:text-lg text-gray dark:text-gray-50 transition-colors duration-200">
             {headline}

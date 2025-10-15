@@ -148,7 +148,7 @@ function DataTable({
             {columns.map(column => (
               <TableHead
                 key={column.name}
-                className={`py-2 px-3 text-gray-400 font-exo2 font-medium text-sm ${column.className}`}
+                className={`py-2 px-3 text-muted-foreground font-exo2 font-medium text-sm ${column.className}`}
               >
                 {column.label}
               </TableHead>
@@ -160,7 +160,7 @@ function DataTable({
             <TableRow>
               <TableCell
                 colSpan={columns.length}
-                className="text-center py-8 text-gray-500"
+                className="text-center py-8 text-muted-foreground"
               >
                 {emptyMessage}
               </TableCell>
