@@ -4,3 +4,15 @@ export { ForgotPassword } from "./auth/forgot/forgot-password";
 export { ResetPassword } from "./auth/reset/reset-password";
 export { HomeRedirectGateway } from "./home/HomeRedirectGateway";
 export { DashboardHomePage } from "./dashboard/HomeDashboardPage";
+export { BalancesPage } from "./balance/BalancesPage";
+export { AccountOverviewPage } from "./account/AccountOverviewPage";
+export { AccountNotificationsPage } from "./account/AccountNotificationsPage";
+export { AccountSupportPage } from "./account/AccountSupportPage";
+export {
+  AccountSettingsPage,
+  AccountVerificationPage,
+  AccountBusinessPage,
+  AccountBankAccountsPage,
+  AccountWhitelistAddressesPage,
+  AccountPrivacySecurityPage,
+} from "./account/AccountStaticPages";

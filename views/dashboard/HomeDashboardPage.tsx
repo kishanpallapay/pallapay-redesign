@@ -1,6 +1,6 @@
 "use client";
 
-import { withResponsiveLayout } from "@/components/layouts/with-responsive-layout";
+import { withResponsiveLayout } from "@/components/layouts/withResponsiveLayout";
 import { EstimatedBalanceCard } from "@/components/pages/dashboard/estimated-balance-card";
 import { LatestTransactionsCard } from "@/components/pages/dashboard/latest-transactions-card";
 import { TransactionsStatusCard } from "@/components/pages/dashboard/transactions-status-card";

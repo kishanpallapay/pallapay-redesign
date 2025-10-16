@@ -6,7 +6,7 @@ import { ReactNode } from "react";
 import { usePathname } from "next/navigation";
 
 import { cn } from "@/lib/utils";
-import type { NavItem } from "./with-responsive-layout";
+import type { NavItem } from "./withResponsiveLayout";
 
 type SidebarNavProps = {
   items: NavItem[];
@@ -96,7 +96,7 @@ export function SidebarNav({
               )}
               <span
                 className={cn(
-                  "font-exo2-semibold text-md transition-colors duration-200",
+                  "font-exo2-medium text-md transition-colors duration-200",
                   isActive
                     ? "text-orange-200"
                     : "text-black dark:text-white group-hover:text-gray-300 dark:group-hover:text-gray-300 "

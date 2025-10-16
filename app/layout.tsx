@@ -20,10 +20,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="font-exo2 antialiased">
-        <ThemeToggle />
-        {children}
-      </body>
+      <body className="font-exo2 antialiased">{children}</body>
     </html>
   );
 }

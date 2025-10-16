@@ -9,12 +9,14 @@ import {
   useMemo,
   useState,
 } from "react";
-import { X } from "lucide-react";
-
 import { cn } from "@/lib/utils";
 import { getNavItemsForRole } from "@/lib/navigation/get-nav-items";
-import { HeaderUser, TopHeader } from "@/components/layouts/top-header";
-import { SidebarNav } from "./sidebar-nav";
+import {
+  HeaderUser,
+  TopHeader,
+  type NotificationItem,
+} from "@/components/layouts/topHeader";
+import { SidebarNav } from "./sidebarNav";
 
 type NavItem = {
   label: string;
@@ -32,6 +34,11 @@ type LayoutOptions = {
   searchPlaceholder?: string;
   user?: HeaderUser;
   hasNotificationDot?: boolean;
+  notifications?: NotificationItem[];
+  onViewAllNotifications?: () => void;
+  onLogout?: () => void;
+  onManageSettings?: () => void;
+  onUpgradeVerification?: () => void;
 };
 
 type ResponsiveLayoutProps = LayoutOptions & {
@@ -41,6 +48,10 @@ type ResponsiveLayoutProps = LayoutOptions & {
 const DEFAULT_USER: HeaderUser = {
   name: "John Doe",
   email: "johndoe@gmail.com",
+  verification: {
+    level: "Standard",
+    accountStatus: "Individual",
+  },
 };
 const DEFAULT_HEADER_HEIGHT = 112;
 
@@ -54,6 +65,11 @@ function ResponsiveLayout({
   searchPlaceholder = "Search",
   user,
   hasNotificationDot = true,
+  notifications,
+  onViewAllNotifications,
+  onLogout,
+  onManageSettings,
+  onUpgradeVerification,
 }: ResponsiveLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [headerHeight, setHeaderHeight] = useState<number | null>(null);
@@ -133,6 +149,11 @@ function ResponsiveLayout({
           hasNotificationDot={hasNotificationDot}
           user={userProfile}
           onHeightChange={handleHeaderHeight}
+          notifications={notifications}
+          onViewAllNotifications={onViewAllNotifications}
+          onLogout={onLogout}
+          onManageSettings={onManageSettings}
+          onUpgradeVerification={onUpgradeVerification}
         />
 
         <main
@@ -161,6 +182,11 @@ export function withResponsiveLayout<P extends Record<string, unknown>>(
         searchPlaceholder={options?.searchPlaceholder}
         user={options?.user}
         hasNotificationDot={options?.hasNotificationDot}
+        notifications={options?.notifications}
+        onViewAllNotifications={options?.onViewAllNotifications}
+        onLogout={options?.onLogout}
+        onManageSettings={options?.onManageSettings}
+        onUpgradeVerification={options?.onUpgradeVerification}
       >
         <Component {...props} />
       </ResponsiveLayout>

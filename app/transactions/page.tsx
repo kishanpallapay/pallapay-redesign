@@ -1,6 +1,6 @@
 "use client";
 import { useState, useMemo } from "react";
-import { withResponsiveLayout } from "@/components/layouts/with-responsive-layout";
+import { withResponsiveLayout } from "@/components/layouts/withResponsiveLayout";
 import { DataTable } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
