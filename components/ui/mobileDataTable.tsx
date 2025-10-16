@@ -260,7 +260,7 @@ export function MobileDataTable({
               {columns.map(column => (
                 <TableHead
                   key={column.key}
-                  className={`px-2 py-3 text-xs font-exo2-medium uppercase tracking-wide text-gray-600 dark:text-gray-300 !whitespace-normal leading-tight ${
+                  className={`px-3 py-3 text-xs font-exo2-medium uppercase tracking-wide text-gray-600 dark:text-gray-300 !whitespace-normal leading-tight ${
                     column.align === "right"
                       ? "text-right"
                       : column.align === "center"
@@ -296,7 +296,7 @@ export function MobileDataTable({
                   role={isInteractive ? "button" : undefined}
                   tabIndex={isInteractive ? 0 : undefined}
                   aria-label={isInteractive ? rowMenuLabel : undefined}
-                  className={`border-t border-gray-100 transition-colors first:border-t-0 hover:bg-gray-50 dark:border-gray-500 dark:hover:bg-gray-600/50 ${
+                  className={`border-t px-2 border-gray-100 transition-colors first:border-t-0 hover:bg-gray-50 dark:border-gray-500 dark:hover:bg-gray-600/50 ${
                     isInteractive
                       ? "cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-200/60 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-orange-200/40 dark:focus-visible:ring-offset-gray-700"
                       : ""
@@ -315,7 +315,7 @@ export function MobileDataTable({
                     return (
                       <TableCell
                         key={`${row.id || rowIndex}-${column.key}`}
-                        className={`px-4 py-4 align-middle ${textAlignClass} ${
+                        className={`px-3 py-4 align-middle ${textAlignClass} ${
                           column.type !== "crypto"
                             ? "text-sm font-exo2-medium text-gray-900 dark:text-white"
                             : ""
