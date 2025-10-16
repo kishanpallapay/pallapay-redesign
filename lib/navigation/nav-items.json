@@ -21,16 +21,16 @@
     "roles": ["merchant", "admin", "analyst"]
   },
   {
-    "id": "crypto-withdrawals",
+    "id": "cryptowithdrawals",
     "label": "Crypto Withdrawals",
-    "href": "/dashboard/withdrawals/crypto",
+    "href": "/cryptowithdrawals",
     "icon": "cryptoWithdrawals",
     "roles": ["merchant", "admin"]
   },
   {
-    "id": "fiat-withdrawals",
+    "id": "fiatwithdrawals",
     "label": "Fiat Withdrawals",
-    "href": "/dashboard/withdrawals/fiat",
+    "href": "/fiatwithdrawals",
     "icon": "fiatWithdrawals",
     "roles": ["merchant", "admin"]
   },
