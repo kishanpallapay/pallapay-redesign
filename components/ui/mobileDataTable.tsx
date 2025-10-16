@@ -223,7 +223,8 @@ export function MobileDataTable({
   const mergedCryptoIcons = { ...DEFAULT_CRYPTO_ICONS, ...cryptoIcons };
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState<any | null>(null);
-  const detailFields = detailColumns && detailColumns.length > 0 ? detailColumns : columns;
+  const detailFields =
+    detailColumns && detailColumns.length > 0 ? detailColumns : columns;
   const isInteractive = true;
 
   const closeDrawer = () => {
@@ -351,10 +352,10 @@ export function MobileDataTable({
         </Table>
       </div>
       {selectedRow && (
-        <DrawerContent className="bg-white dark:bg-gray-700">
+        <DrawerContent className="bg-white dark:bg-black">
           <DrawerHeader className="px-6 pt-5 pb-2 text-left">
-            <div className="flex items-start justify-between">
-              <DrawerTitle className="text-lg font-exo2-semibold text-gray-900 dark:text-gray-50">
+            <div className="flex items-start justify-between border-b dark:border-gray-500 border-gray-100">
+              <DrawerTitle className="text-lg font-exo2-semibold text-gray-900 dark:text-gray-50 mb-2.5">
                 {detailTitle}
               </DrawerTitle>
               <DrawerClose asChild>
@@ -369,7 +370,7 @@ export function MobileDataTable({
             </div>
           </DrawerHeader>
           <div className="px-6 pb-2">
-            <div className="flex flex-col gap-4 rounded-2xl border border-gray-100 bg-white px-4 py-5 shadow-sm dark:border-gray-500/50 dark:bg-gray-600">
+            <div className="flex flex-col gap-4 rounded-2xl py-5">
               {detailFields.map(detailColumn => {
                 const value = getCellValue(selectedRow, detailColumn.key);
                 const hasValue =
@@ -390,7 +391,7 @@ export function MobileDataTable({
                 return (
                   <div
                     key={detailColumn.key}
-                    className="flex items-start justify-between gap-6"
+                    className="flex items-start justify-between  gap-6"
                   >
                     <span className="text-sm font-exo2-medium text-gray-500 dark:text-gray-200">
                       {detailColumn.label}
@@ -406,7 +407,7 @@ export function MobileDataTable({
             </div>
           </div>
           {actions.length > 0 && (
-            <DrawerFooter className="gap-3 border-t border-gray-100 bg-gray-50 pb-6 pt-4 dark:border-gray-600 dark:bg-gray-600">
+            <DrawerFooter className="gap-3 pb-6 pt-4 dark:bg-gray-600">
               {actions.map((action, index) => (
                 <Button
                   key={`${action.label}-${index}`}

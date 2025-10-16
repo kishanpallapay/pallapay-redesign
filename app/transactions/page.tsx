@@ -306,11 +306,11 @@ function TransactionsContent() {
         </div>
 
         <DataTable columns={columns} data={paginatedData} />
-        <div className="flex items-center justify-between mt-4 flex-wrap">
+        <div className="flex items-center justify-between mt-4 flex-wrap gap-3">
           <div className="text-sm text-muted-foreground">
             Showing {startIndex} to {endIndex} of {transactions.length} results
           </div>
-          <div>
+          <div className="sm:w-full md:w-fit">
             <SmartPagination
               currentPage={currentPage}
               totalPages={totalPages}
