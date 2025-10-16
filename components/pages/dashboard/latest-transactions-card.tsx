@@ -3,7 +3,6 @@
 import type { JSX } from "react";
 
 import { ArrowRight } from "lucide-react";
-
 import { DataTable, type ColumnConfig } from "@/components/ui/dataTable";
 import {
   MobileDataTable,
@@ -139,42 +138,22 @@ const handleMobileRowClick = (_transaction: LatestTransaction) => {
   console.log("Mobile row clicked:", _transaction);
 };
 
-const getMobileRowActions = (transaction: LatestTransaction): RowAction[] => {
-  const actions: RowAction[] = [
-    {
-      label: "Show More Detail",
-      variant: "outline",
-      size: "lg",
-      onClick: () =>
-        console.log("Show more detail for transaction:", transaction.id),
-    },
-  ];
-
-  if (transaction.status === "completed") {
-    actions.push({
-      label: "Download Receipt",
-      variant: "primary",
-      size: "lg",
-      onClick: () =>
-        console.log("Download receipt for transaction:", transaction.id),
-    });
-  }
-
-  if (transaction.status === "failed" || transaction.status === "canceled") {
-    actions.push({
-      label: "Retry Payment",
-      variant: "alert",
-      size: "lg",
-      onClick: () =>
-        console.log("Retry payment for transaction:", transaction.id),
-    });
-  }
-
-  return actions;
-};
-
 export function LatestTransactionsCard(): JSX.Element {
   const router = useRouter();
+  const getMobileRowActions = (transaction: LatestTransaction): RowAction[] => {
+    const actions: RowAction[] = [
+      {
+        label: "Show More Detail",
+        variant: "outline",
+        className: "border-gray text-gray dark:text-white dark:border-white",
+        size: "lg",
+        onClick: () => router.push(`/transactions/${transaction.id}`),
+        closeOnClick: true,
+      },
+    ];
+
+    return actions;
+  };
 
   const handleNavigateToTransaction = () => {
     if (router) {

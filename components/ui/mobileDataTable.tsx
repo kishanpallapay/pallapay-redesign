@@ -394,7 +394,7 @@ export function MobileDataTable({
                     className="flex items-start justify-between  gap-6"
                   >
                     <span className="text-sm font-exo2-medium text-gray-500 dark:text-gray-200">
-                      {detailColumn.label}
+                      {detailColumn.label} :
                     </span>
                     <div className="flex min-w-0 flex-1 justify-end text-right text-sm font-exo2-medium text-gray-900 dark:text-white">
                       <div className="flex max-w-full justify-end text-right">

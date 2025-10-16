@@ -76,10 +76,10 @@ function TransactionDetailsContent() {
             {value}
           </Badge>
         ) : (
-          <span className="flex items-center gap-1.5 text-xs sm:text-sm md:text-[15px] font-medium text-gray-600 dark:text-gray-100 break-words">
+          <div className="flex items-center gap-1.5 text-xs sm:text-sm md:text-[15px] font-medium text-gray-600 dark:text-gray-100 truncate text-ellipsis">
             {Icon && <Icon className="h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0" />}
             {value}
-          </span>
+          </div>
         )}
       </div>
     );
@@ -98,7 +98,7 @@ function TransactionDetailsContent() {
     while (filled.length < 3) filled.push({ label: "", value: "" });
 
     return (
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-x-3 gap-y-3">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-x-8 gap-y-3">
         {filled.map((item, i) =>
           item.label ? (
             <Item
@@ -121,12 +121,12 @@ function TransactionDetailsContent() {
         className="flex items-center justify-between mb-4 sm:hidden cursor-pointer text-sm font-medium"
         onClick={() => router.back()}
       >
-        <span className="flex items-center justify-start gap-1">
+        <span className="flex items-center justify-start gap-1 dark:text-white">
           <ChevronLeft className="h-4 w-4" />
           Transaction Details
         </span>
       </div>
-      <div className="bg-gray-50 dark:bg-gray-700 rounded-xl p-3 sm:p-4 md:p-6 shadow-sm space-y-4 sm:space-y-5">
+      <div className="bg-gray-50 dark:bg-gray-600 rounded-xl p-3 sm:p-4 md:p-6 shadow-sm space-y-4 sm:space-y-5">
         <div className="hidden md:flex items-center justify-between mb-3">
           <h1 className="text-lg sm:text-xl font-semibold text-gray-800 dark:text-gray-100">
             Transaction #{data["Ref ID"]}
