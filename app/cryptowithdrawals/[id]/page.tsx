@@ -2,40 +2,26 @@
 
 import React from "react";
 import { useParams, useRouter } from "next/navigation";
-import { ArrowLeft, ChevronLeft } from "lucide-react";
+import { ArrowLeft, ChevronLeft, Printer } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { withResponsiveLayout } from "@/components/layouts/withResponsiveLayout";
 import { Badge } from "@/components/ui/badge";
 import Generic from "@/components/icons/crypto/Generic";
 
-function TransactionDetailsContent() {
+function CryptoWithdrawalDetailsContent() {
   const router = useRouter();
   const { id } = useParams();
 
-  // Example static data
   const data = {
-    "Ref ID": id,
-    "Payment Amount": "8500 AED",
-    "Receiving Amount": "8000 AED",
-    "Crypto Amount": "455.6879 USDT",
-    "Payment Network": "Tron (TRC20)",
-    "Fee Paid by": "Buyer",
-    "Payment Fee": "500 AED",
-    "Payment Type": "API",
-    "API Note": "Pallapay Demo.",
-    "Fiat Currency": "AED",
-    "Merchant Name": "Test",
-    "POS Device Name": "-",
-    "Payer Email Address": "johndoe@gmail.com",
-    "Payer First Name": "John",
-    "Payer Last Name": "Doe",
-    "Payer Note": "-",
-    "Paid at": "-",
-    "IPN Payment Request ID": "dfhjtrei456lkfgdotdr578876542v",
-    "IPN Notify Status": "Done",
-    "IPN Notify Date": "21/07/2025, 14:02",
+    "Ref ID": id || "123456789012",
+    "Withdrawal Amount": "8500 AED",
+    "Total Crypto Amount": "455.6879 TRX",
+    "Receiving Crypto Amount": "400.24 TRX",
+    "Fee Amount": "500 AED",
+    Status: "Completed",
     "Date of Create": "21/07/2025, 14:02",
-    Status: "Canceled",
+    "Wallet Address": "qwerdiohrsdo65okxcfjfdpojs4 (TRX)",
+    "Transaction Hash": "qwerdiohrsdo65okxcfjfdpojs4r3aronicxfopioterw654foj",
   };
 
   const Item = ({
@@ -45,19 +31,19 @@ function TransactionDetailsContent() {
   }: {
     label: string;
     value: string;
-    icon?: React.ComponentType<{ className?: string }>;
+    icon?: React.ComponentType<{ className?: string; }>;
   }) => {
-    const isStatus = ["Done", "Canceled", "Processing"].includes(value);
+    const isStatus = ["Completed", "Pending", "Failed"].includes(value);
     const Icon = icon;
 
     const getVariant = (status: string) => {
       switch (status) {
-        case "Done":
+        case "Completed":
           return "success";
-        case "Canceled":
-          return "ghost";
-        case "Processing":
+        case "Pending":
           return "process";
+        case "Failed":
+          return "ghost";
         default:
           return "default";
       }
@@ -91,14 +77,14 @@ function TransactionDetailsContent() {
     items: {
       label: string;
       value: any;
-      icon?: React.ComponentType<{ className?: string }>;
+      icon?: React.ComponentType<{ className?: string; }>;
     }[];
   }) => {
     const filled = [...items];
     while (filled.length < 3) filled.push({ label: "", value: "" });
 
     return (
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-x-3 gap-y-3">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-x-3 gap-y-3">
         {filled.map((item, i) =>
           item.label ? (
             <Item
@@ -117,19 +103,30 @@ function TransactionDetailsContent() {
 
   return (
     <div className="mx-auto">
+      {/* Mobile Header */}
       <div
         className="flex items-center justify-between mb-4 sm:hidden cursor-pointer text-sm font-medium"
         onClick={() => router.back()}
       >
         <span className="flex items-center justify-start gap-1 text-foreground">
           <ChevronLeft className="h-4 w-4" />
-          Transaction Details
+          Crypto Withdrawal #{data["Ref ID"]}
         </span>
+        <Button
+          size="sm"
+          className="flex items-center gap-1"
+
+        >
+          <Printer className="h-4 w-4" />
+          Print
+        </Button>
       </div>
+
+      {/* Main Card */}
       <div className="bg-gray-50 dark:bg-gray-600 rounded-xl p-3 sm:p-4 md:p-6 shadow-sm space-y-4 sm:space-y-5">
         <div className="hidden md:flex items-center justify-between mb-3">
           <h1 className="text-lg sm:text-xl font-semibold text-gray-800 dark:text-gray-100">
-            Transaction #{data["Ref ID"]}
+            Crypto Withdrawal #{data["Ref ID"]}
           </h1>
           <Button
             variant="outline"
@@ -140,77 +137,51 @@ function TransactionDetailsContent() {
             <ArrowLeft className="h-4 w-4" />
             Back
           </Button>
+          <Button
+            size="sm"
+            className="flex items-center gap-1"
+
+          >
+            <Printer className="h-4 w-4" />
+            Print
+          </Button>
         </div>
 
         <Row
           items={[
             { label: "Ref ID", value: data["Ref ID"] },
-            { label: "Payment Amount", value: data["Payment Amount"] },
-            { label: "Receiving Amount", value: data["Receiving Amount"] },
-          ]}
-        />
-        <Row
-          items={[
+            { label: "Withdrawal Amount", value: data["Withdrawal Amount"] },
             {
-              label: "Crypto Amount",
-              value: data["Crypto Amount"],
+              label: "Total Crypto Amount",
+              value: data["Total Crypto Amount"],
               icon: Generic,
             },
-            { label: "Payment Network", value: data["Payment Network"] },
-            { label: "Fee Paid by", value: data["Fee Paid by"] },
           ]}
         />
         <Row
           items={[
-            { label: "Payment Fee", value: data["Payment Fee"] },
-            { label: "Payment Type", value: data["Payment Type"] },
-            { label: "API Note", value: data["API Note"] },
-          ]}
-        />
-        <Row
-          items={[
-            { label: "Fiat Currency", value: data["Fiat Currency"] },
-            { label: "Merchant Name", value: data["Merchant Name"] },
-          ]}
-        />
-        <Row
-          items={[{ label: "POS Device Name", value: data["POS Device Name"] }]}
-        />
-
-        {/* Section 2 - Payer info */}
-        <Row
-          items={[
+            { label: "Status", value: data["Status"] },
+            { label: "Fee Amount", value: data["Fee Amount"] },
             {
-              label: "Payer Email Address",
-              value: data["Payer Email Address"],
+              label: "Receiving Crypto Amount",
+              value: data["Receiving Crypto Amount"],
+              icon: Generic,
             },
-            { label: "Payer First Name", value: data["Payer First Name"] },
-            { label: "Payer Last Name", value: data["Payer Last Name"] },
-          ]}
-        />
-        <Row
-          items={[
-            { label: "Payer Note", value: data["Payer Note"] },
-            { label: "Paid at", value: data["Paid at"] },
-          ]}
-        />
-
-        {/* Section 3 - IPN info */}
-
-        <Row
-          items={[
-            {
-              label: "IPN Payment Request ID",
-              value: data["IPN Payment Request ID"],
-            },
-            { label: "IPN Notify Status", value: data["IPN Notify Status"] },
-            { label: "IPN Notify Date", value: data["IPN Notify Date"] },
           ]}
         />
         <Row
           items={[
             { label: "Date of Create", value: data["Date of Create"] },
-            { label: "Status", value: data["Status"] },
+          ]}
+        />
+        <Row
+          items={[
+            { label: "Wallet Address", value: data["Wallet Address"] },
+          ]}
+        />
+        <Row
+          items={[
+            { label: "Transaction Hash", value: data["Transaction Hash"] },
           ]}
         />
       </div>
@@ -218,16 +189,21 @@ function TransactionDetailsContent() {
   );
 }
 
-const TransactionDetailsPage = withResponsiveLayout(TransactionDetailsContent, {
-  role: "merchant",
-  header: (
-    <span className="font-exo2-semibold text-black dark:text-white">
-      Transaction Details
-    </span>
-  ),
-  sidebarTitle: (
-    <span className="text-sm font-semibold uppercase">Transaction Details</span>
-  ),
-});
+const CryptoWithdrawalDetailsPage = withResponsiveLayout(
+  CryptoWithdrawalDetailsContent,
+  {
+    role: "merchant",
+    header: (
+      <span className="font-exo2-semibold text-black dark:text-white">
+        Crypto Withdrawal Details
+      </span>
+    ),
+    sidebarTitle: (
+      <span className="text-sm font-semibold uppercase">
+        Crypto Withdrawal Details
+      </span>
+    ),
+  }
+);
 
-export default TransactionDetailsPage;
+export default CryptoWithdrawalDetailsPage;
